@@ -6,14 +6,17 @@ import Typography from "../atoms/Typography";
 import InputBox from "../atoms/InputBox";
 import PrimaryButton from "../atoms/PrimaryButton"
 import { adminLogin } from "../../APIs/admin.services";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
+  const navigate = useNavigate()
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const setAuthenticated = useStore((state) => state.setAuthenticated);
+  const setJWTToken = useStore((state)=>state.setJwtToken)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +31,8 @@ const AdminLogin = () => {
       const response = await adminLogin(credentials);
       if (response?.success) {
         setAuthenticated(true);
-        localStorage.setItem("authToken", response.token);
+        setJWTToken(response.token)
+        navigate("/home")
       } else {
         toast.error("Login failed! try again.");
       }

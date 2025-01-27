@@ -7,6 +7,8 @@ const useStore = create((set) => ({
   },
   activeTab: "/admin/dashboard",
   setActiveTab: (tab) => set({ activeTab: tab }),
+  jwtToken: "",
+  setJwtToken: (token) => set({ jwtToken: token }),
 }));
 
 // Persist the state to localStorage when it changes
