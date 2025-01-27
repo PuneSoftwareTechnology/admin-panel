@@ -1,7 +1,12 @@
 import React from "react";
+import AdminLogin from "./components/screens/AdminLogin";
 
 const App = () => {
-  return <div className="bg-red-700">wprkig</div>;
+  return (
+    <div className="">
+      <AdminLogin />
+    </div>
+  );
 };
 
 export default App;
