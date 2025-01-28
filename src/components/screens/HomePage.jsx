@@ -7,6 +7,8 @@ import {
   HiLogout,
   HiViewGrid,
 } from "react-icons/hi";
+import { FaCodePullRequest } from "react-icons/fa6";
+import { FiXSquare } from "react-icons/fi";
 import LOGO from "../../assets/Logo.png";
 import Typography from "../atoms/Typography";
 import useStore from "../../utils/zustand";
@@ -16,6 +18,7 @@ import Footer from "../Molecule/Footer";
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome /> },
   { label: "Dashboard", path: "dashboard", icon: <HiViewGrid /> },
+  { label: "Requests", path: "requests", icon: <FaCodePullRequest /> },
   { label: "Settings", path: "settings", icon: <HiOutlineCog /> },
   { label: "Logout", path: "logout", icon: <HiLogout />, isButton: true },
 ];
@@ -59,10 +62,12 @@ const HomePage = () => {
                   <Link
                     to={item.path}
                     className={`flex items-center gap-2 px-2 py-2 rounded ${
-                      location.pathname === item.path
+                      location.pathname === item.path ||
+                      activeTab === item?.path
                         ? "bg-gray-600"
                         : "hover:bg-gray-700"
                     }`}
+                    onClick={() => setActiveTab(item?.path)}
                   >
                     {item.icon}
                     {item.label}
@@ -73,12 +78,22 @@ const HomePage = () => {
           </ul>
         </nav>
       </div>
+      {isNavOpen && (
+        <FiXSquare
+          onClick={toggleNav}
+          size={32}
+          color="white"
+          className="bg-gray-800 rounded-md lg:hidden fixed top-0 left-60"
+        />
+      )}
 
       {/* Main Content */}
       <div className="flex-1">
-        <header className="flex items-center justify-between p-4 bg-gray-700 text-white md:hidden">
+        <header className="flex items-center justify-between p-4 bg-gray-800 text-white md:hidden">
           <HiMenuAlt3 size={24} onClick={toggleNav} />
-          <Typography variant="h6">Pune Software Technologies</Typography>
+          <Typography variant="h6" color="text-white">
+            Pune Software Technologies
+          </Typography>
         </header>
         <main>
           <div className="flex flex-col min-h-screen">

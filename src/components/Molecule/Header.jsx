@@ -9,7 +9,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center">
+    <header className="bg-gray-800 text-white py-4 px-6 flex justify-between items-center lg:flex lg:justify-between hidden lg:block">
       {/* Left Section */}
       <div className="text-lg font-bold">Welcome to the App</div>
 
