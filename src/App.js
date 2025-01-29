@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import useStore from "./utils/zustand";
 import AdminLogin from "./components/screens/AdminLogin";
@@ -6,10 +6,22 @@ import HomePage from "./components/screens/HomePage";
 import Dashboard from "./components/screens/Dashboard";
 import Settings from "./components/screens/Settings";
 import DemoRequests from "./components/screens/DemoResponses";
+import CreateUser from "./components/screens/CreateUser";
+import ErrorPage from "./components/screens/ErrorPage";
+import NotAuthorized from "./components/screens/NotAuthorised";
 
-const ProtectedRoute = ({ element }) => {
-  const isAuthenticated = useStore((state) => state.isAuthenticated);
-  return isAuthenticated ? element : <Navigate to="/admin-login" />;
+const ProtectedRoute = ({ element, requiredRole }) => {
+  const { isAuthenticated, userRole } = useStore((state) => state);
+  const navigateTo = useMemo(() => {
+    if (!isAuthenticated) return "/admin-login";
+    if (requiredRole && userRole !== requiredRole) return "/not-authorised";
+    return null; // Proceed to the element
+  }, [isAuthenticated, userRole, requiredRole]);
+
+  if (navigateTo) {
+    return <Navigate to={navigateTo} />;
+  }
+  return element;
 };
 
 const App = () => {
@@ -17,12 +29,29 @@ const App = () => {
     <Routes>
       <Route path="/" element={<AdminLogin />} />
       <Route path="/admin-login" element={<AdminLogin />} />
+      <Route
+        path="/create-user"
+        element={
+          <ProtectedRoute element={<CreateUser />} requiredRole="SUPER_ADMIN" />
+        }
+      />
       <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}>
         <Route index element={<div>Welcome to Home</div>} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="requests" element={<DemoRequests />} />
-        <Route path="settings" element={<Settings />} />
+        <Route
+          path="dashboard"
+          element={<ProtectedRoute element={<Dashboard />} />}
+        />
+        <Route
+          path="requests"
+          element={<ProtectedRoute element={<DemoRequests />} />}
+        />
+        <Route
+          path="settings"
+          element={<ProtectedRoute element={<Settings />} />}
+        />
       </Route>
+      <Route path="/error" element={<ErrorPage />} />
+      <Route path="/not-authorised" element={<NotAuthorized />} />
     </Routes>
   );
 };

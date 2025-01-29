@@ -18,7 +18,7 @@ const ErrorPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-32 bg-gray-100">
+    <div className="flex flex-col items-center justify-center mt-32 ">
       <Typography variant="h1">Something went wrong!</Typography>
       <Typography variant="h5">
         An unexpected error has occurred. Please try again later.

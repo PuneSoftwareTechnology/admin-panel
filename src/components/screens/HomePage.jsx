@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   HiMenuAlt3,
   HiHome,
@@ -14,6 +14,8 @@ import Typography from "../atoms/Typography";
 import useStore from "../../utils/zustand";
 import Header from "../Molecule/Header";
 import Footer from "../Molecule/Footer";
+import PrimaryButton from "../atoms/PrimaryButton"; // Assuming you have this button component
+import SecondaryButton from "../atoms/SecondaryButton";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome /> },
@@ -26,11 +28,18 @@ const menuItems = [
 const HomePage = () => {
   const activeTab = useStore((state) => state.activeTab);
   const setActiveTab = useStore((state) => state.setActiveTab);
-
+  const [openModal, setOpenModal] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const location = useLocation(); // React Router hook to get current path
+  const location = useLocation();
+  const navigate = useNavigate(); // React Router hook to navigate
 
   const toggleNav = () => setIsNavOpen(!isNavOpen);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+    setOpenModal(false);
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -53,7 +62,7 @@ const HomePage = () => {
                 {item.isButton ? (
                   <button
                     className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-gray-600"
-                    onClick={() => alert("Logged out")}
+                    onClick={() => setOpenModal(true)}
                   >
                     {item.icon}
                     {item.label}
@@ -99,12 +108,31 @@ const HomePage = () => {
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow p-4 bg-gray-100">
-              <Outlet /> {/* Render content based on the current route */}
+              <Outlet />
             </main>
             <Footer />
           </div>
         </main>
       </div>
+
+      {/* Logout Modal */}
+      {openModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-start pt-4 justify-center z-20">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <Typography variant="h6" color="black" className="mb-4">
+              Are you sure you want to log out?
+            </Typography>
+            <div className="flex justify-end items-center gap-4">
+              <SecondaryButton onClick={() => setOpenModal(false)} color="gray">
+                Cancel
+              </SecondaryButton>
+              <PrimaryButton onClick={handleLogout} color="red">
+                Logout
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
