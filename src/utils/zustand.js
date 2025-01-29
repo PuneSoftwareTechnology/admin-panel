@@ -6,11 +6,13 @@ const useStore = create((set) => ({
   activeTab: "/admin/dashboard",
   userRole: "",
   email: "",
+  name: "",
   setAuthenticated: (auth) => set({ isAuthenticated: auth }),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setJwtToken: (token) => set({ jwtToken: token }),
   setRole: (role) => set({ userRole: role }),
-  setEmail: (email) => set({ email: email }),
+  setEmail: (email) => set({ email }),
+  setName: (name) => set({ name }),
 }));
 
 // Persist the state to localStorage when it changes
