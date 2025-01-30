@@ -14,8 +14,6 @@ import Typography from "../atoms/Typography";
 import useStore from "../../utils/zustand";
 import Header from "../Molecule/Header";
 import Footer from "../Molecule/Footer";
-import PrimaryButton from "../atoms/PrimaryButton"; // Assuming you have this button component
-import SecondaryButton from "../atoms/SecondaryButton";
 import { FaUsers } from "react-icons/fa";
 import LogoutModal from "../Organims/LogoutModal";
 
