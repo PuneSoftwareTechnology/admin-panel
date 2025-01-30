@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { getAllUsers } from "../../APIs/admin.services";
+import { deleteUser, getAllUsers } from "../../APIs/admin.services";
 import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
 import moment from "moment/moment";
 import DeleteModal from "../Organims/DeleteModal";
+import { toast } from "react-toastify";
 
 const UsersTable = () => {
   const [usersData, setUsersData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState();
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchAllUsers = async () => {
     try {
       setLoading(true);
       const allUsers = await getAllUsers();
-      console.log("API Response:", allUsers);
 
       if (allUsers.success && Array.isArray(allUsers.data)) {
         setUsersData([...allUsers.data]);
@@ -31,6 +33,22 @@ const UsersTable = () => {
   useEffect(() => {
     fetchAllUsers();
   }, []);
+
+  const deleteAdminUSer = async () => {
+    if (!selectedUser) return;
+
+    setDeleteLoading(true);
+    const response = await deleteUser({ email: selectedUser?.email });
+
+    if (response?.success) {
+      toast.success("User deleted successfully");
+      setOpenModal(false);
+      fetchAllUsers(); // Refetch the user data after successful deletion
+    } else {
+      toast.error("Error deleting user");
+    }
+    setDeleteLoading(false);
+  };
 
   if (loading) {
     return <Loader className={"mx-auto mt-32 border-gray-900"} size="large" />;
@@ -71,6 +89,7 @@ const UsersTable = () => {
                 <td
                   className="px-4 py-2 border text-center "
                   onClick={() => {
+                    setSelectedUser(user);
                     setOpenModal(true);
                   }}
                 >
@@ -88,7 +107,8 @@ const UsersTable = () => {
         <DeleteModal
           isOpen={openModal}
           onClose={() => setOpenModal(false)}
-          onDelete={() => {}}
+          onDelete={deleteAdminUSer}
+          loading={deleteLoading}
         />
       )}
     </div>

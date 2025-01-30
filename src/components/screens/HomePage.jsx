@@ -18,15 +18,42 @@ import { FaUsers } from "react-icons/fa";
 import LogoutModal from "../Organims/LogoutModal";
 
 const menuItems = [
-  { label: "Home", path: "/home", icon: <HiHome /> },
-  { label: "Dashboard", path: "dashboard", icon: <HiViewGrid /> },
-  { label: "Requests", path: "requests", icon: <FaCodePullRequest /> },
-  { label: "Settings", path: "settings", icon: <HiOutlineCog /> },
-  { label: "All USers", path: "all-users", icon: <FaUsers /> },
-  { label: "Logout", path: "logout", icon: <HiLogout />, isButton: true },
+  { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
+  {
+    label: "Dashboard",
+    path: "dashboard",
+    icon: <HiViewGrid />,
+    role: "ADMIN",
+  },
+  {
+    label: "Requests",
+    path: "requests",
+    icon: <FaCodePullRequest />,
+    role: "ADMIN",
+  },
+  {
+    label: "Settings",
+    path: "settings",
+    icon: <HiOutlineCog />,
+    role: "ADMIN",
+  },
+  {
+    label: "All Users",
+    path: "all-users",
+    icon: <FaUsers />,
+    role: "SUPER_ADMIN",
+  },
+  {
+    label: "Logout",
+    path: "logout",
+    icon: <HiLogout />,
+    isButton: true,
+    role: "ADMIN",
+  },
 ];
 
 const HomePage = () => {
+  const userRole = useStore((state) => state.userRole); // Get userRole from Zustand store
   const activeTab = useStore((state) => state.activeTab);
   const setActiveTab = useStore((state) => state.setActiveTab);
   const [openModal, setOpenModal] = useState(false);
@@ -58,33 +85,44 @@ const HomePage = () => {
         </div>
         <nav className="mt-4">
           <ul className="space-y-2 px-4">
-            {menuItems.map((item) => (
-              <li key={item.path}>
-                {item.isButton ? (
-                  <button
-                    className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-gray-600"
-                    onClick={() => setOpenModal(true)}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </button>
-                ) : (
-                  <Link
-                    to={item.path}
-                    className={`flex items-center gap-2 px-2 py-2 rounded ${
-                      location.pathname === item.path ||
-                      activeTab === item?.path
-                        ? "bg-gray-600"
-                        : "hover:bg-gray-700"
-                    }`}
-                    onClick={() => setActiveTab(item?.path)}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
+            {menuItems.map((item) => {
+              if (
+                item.role &&
+                item.role !== userRole &&
+                userRole !== "SUPER_ADMIN"
+              ) {
+                // Skip rendering menu items where the role does not match the user's role
+                return null;
+              }
+
+              return (
+                <li key={item.path}>
+                  {item.isButton ? (
+                    <button
+                      className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-gray-600"
+                      onClick={() => setOpenModal(true)}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </button>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className={`flex items-center gap-2 px-2 py-2 rounded ${
+                        location.pathname === item.path ||
+                        activeTab === item?.path
+                          ? "bg-gray-600"
+                          : "hover:bg-gray-700"
+                      }`}
+                      onClick={() => setActiveTab(item?.path)}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>

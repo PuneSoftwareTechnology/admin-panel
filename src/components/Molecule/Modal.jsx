@@ -30,7 +30,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div
       id="modal-backdrop"
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-start mt-8 justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-start pt-8 justify-center z-50"
       onClick={handleBackdropClick}
     >
       <div
