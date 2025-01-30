@@ -9,6 +9,7 @@ import DemoRequests from "./components/screens/DemoResponses";
 import CreateUser from "./components/screens/CreateUser";
 import ErrorPage from "./components/screens/ErrorPage";
 import NotAuthorized from "./components/screens/NotAuthorised";
+import AllUsers from "./components/screens/AllUsers";
 
 const ProtectedRoute = ({ element, requiredRole }) => {
   const { isAuthenticated, userRole } = useStore((state) => state);
@@ -48,6 +49,10 @@ const App = () => {
         <Route
           path="settings"
           element={<ProtectedRoute element={<Settings />} />}
+        />
+        <Route
+          path="all-users"
+          element={<ProtectedRoute element={<AllUsers />} />}
         />
       </Route>
       <Route path="/error" element={<ErrorPage />} />

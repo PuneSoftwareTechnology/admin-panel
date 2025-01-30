@@ -1,11 +1,31 @@
 import axios from "axios";
 import { LOCAL_URL } from "../utils/urls";
 
-// Common function to handle POST requests
-const apiPostRequest = async (endpoint, payload, errorMessage) => {
+// Utility function to handle API requests with different methods
+const apiRequest = async (
+  method,
+  endpoint,
+  payload = null,
+  errorMessage = "",
+  requireAuth = false
+) => {
   try {
     const url = `${LOCAL_URL}${endpoint}`;
-    const { data } = await axios.post(url, payload);
+    const token = requireAuth
+      ? JSON.parse(localStorage.getItem("zustandStore"))?.jwtToken
+      : null;
+
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const config = {
+      method,
+      url,
+      headers,
+      data: payload,
+    };
+
+    const { data } = await axios(config);
+
     return data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
@@ -20,14 +40,26 @@ const apiPostRequest = async (endpoint, payload, errorMessage) => {
   }
 };
 
-// Admin login function
+// Admin login function (POST) - No token required
 export const adminLogin = (payload) =>
-  apiPostRequest("/admin/login", payload, "Failed to log in the admin.");
+  apiRequest(
+    "POST",
+    "/admin/login",
+    payload,
+    "Failed to log in the admin.",
+    false
+  );
 
-// Create Admin User function
+// Create Admin User function (POST) - No token required
 export const createAdminUser = (payload) =>
-  apiPostRequest(
+  apiRequest(
+    "POST",
     "/admin/create-user",
     payload,
-    "Failed to create the admin user."
+    "Failed to create the admin user.",
+    true
   );
+
+// Get All Users function (GET) - Token required
+export const getAllUsers = () =>
+  apiRequest("GET", "/admin/all-users", null, "Failed to fetch users.", true);

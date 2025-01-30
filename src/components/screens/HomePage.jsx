@@ -16,12 +16,15 @@ import Header from "../Molecule/Header";
 import Footer from "../Molecule/Footer";
 import PrimaryButton from "../atoms/PrimaryButton"; // Assuming you have this button component
 import SecondaryButton from "../atoms/SecondaryButton";
+import { FaUsers } from "react-icons/fa";
+import LogoutModal from "../Organims/LogoutModal";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome /> },
   { label: "Dashboard", path: "dashboard", icon: <HiViewGrid /> },
   { label: "Requests", path: "requests", icon: <FaCodePullRequest /> },
   { label: "Settings", path: "settings", icon: <HiOutlineCog /> },
+  { label: "All USers", path: "all-users", icon: <FaUsers /> },
   { label: "Logout", path: "logout", icon: <HiLogout />, isButton: true },
 ];
 
@@ -115,24 +118,13 @@ const HomePage = () => {
         </main>
       </div>
 
-      {/* Logout Modal */}
-      {openModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-start pt-4 justify-center z-20">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <Typography variant="h6" color="black" className="mb-4">
-              Are you sure you want to log out?
-            </Typography>
-            <div className="flex justify-end items-center gap-4">
-              <SecondaryButton onClick={() => setOpenModal(false)} color="gray">
-                Cancel
-              </SecondaryButton>
-              <PrimaryButton onClick={handleLogout} color="red">
-                Logout
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-      )}
+      <LogoutModal
+        isOpen={openModal}
+        onClose={() => {
+          setOpenModal(false);
+        }}
+        handleLogout={handleLogout}
+      />
     </div>
   );
 };
