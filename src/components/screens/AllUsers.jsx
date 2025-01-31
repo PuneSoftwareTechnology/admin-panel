@@ -61,21 +61,28 @@ const UsersTable = () => {
           No Active Users
         </Typography>
       ) : (
-        <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+        <table className="min-w-full bg-white border border-gray-500 shadow-md rounded-lg">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2 border">ID</th>
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Username</th>
-              <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Role</th>
-              <th className="px-4 py-2 border">Created At</th>
-              <th className="px-4 py-2 border"></th>
+            <tr className="bg-gray-600">
+              <th className="px-4 text-white py-2 border">ID</th>
+              <th className="px-4 text-white py-2 border">Name</th>
+              <th className="px-4 text-white py-2 border">Username</th>
+              <th className="px-4 text-white py-2 border">Email</th>
+              <th className="px-4 text-white py-2 border">Role</th>
+              <th className="px-4 text-white py-2 border">Created At</th>
+              <th className="px-4 text-white py-2 border"></th>
             </tr>
           </thead>
           <tbody>
             {usersData.map((user, index) => (
-              <tr key={user.id} className="hover:bg-gray-100">
+              <tr
+                key={user.id}
+                className={
+                  index % 2 === 0
+                    ? "bg-white hover:bg-gray-100"
+                    : "bg-gray-200 hover:bg-gray-300"
+                }
+              >
                 <td className="px-4 py-2 border text-center">{index}</td>
                 <td className="px-4 py-2 border">{user.name}</td>
                 <td className="px-4 py-2 border">{user.username}</td>

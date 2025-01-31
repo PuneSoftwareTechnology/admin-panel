@@ -16,6 +16,7 @@ import Header from "../Molecule/Header";
 import Footer from "../Molecule/Footer";
 import { FaUsers } from "react-icons/fa";
 import LogoutModal from "../Organims/LogoutModal";
+import { FaQuestion } from "react-icons/fa";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -29,6 +30,12 @@ const menuItems = [
     label: "Requests",
     path: "requests",
     icon: <FaCodePullRequest />,
+    role: "ADMIN",
+  },
+  {
+    label: "All Faqs",
+    path: "all-faqs",
+    icon: <FaQuestion />,
     role: "ADMIN",
   },
   {

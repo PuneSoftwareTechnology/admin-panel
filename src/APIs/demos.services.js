@@ -1,4 +1,11 @@
 import { apiRequest } from "./apiCall";
 
-export const getDemoRequests = () =>
-  apiRequest("GET", "/demo/responses", null, "Failed to fetch demos", true);
+export const getDemoRequests = async () => {
+  return await apiRequest(
+    "GET",
+    "/demo/responses",
+    null,
+    "Failed to fetch demos",
+    true
+  );
+};

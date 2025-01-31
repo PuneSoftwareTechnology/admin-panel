@@ -15,7 +15,8 @@ const Header = () => {
       {/* Right Section */}
       <div className="relative group">
         <FaUserCircle className="cursor-pointer text-3xl hover:text-blue-400 sm:text-2xl" />
-        <div className="absolute p-2 right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-gray-300">
+
+        <div className="absolute right-0 mt-2 py-2 w-40 bg-white text-gray-800 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-gray-300 hidden group-hover:block">
           <Typography
             variant="h6"
             className="border-b pb-2 text-center font-semibold text-gray-900"

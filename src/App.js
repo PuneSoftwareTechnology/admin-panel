@@ -10,6 +10,8 @@ import CreateUser from "./components/screens/CreateUser";
 import ErrorPage from "./components/screens/ErrorPage";
 import NotAuthorized from "./components/screens/NotAuthorised";
 import AllUsers from "./components/screens/AllUsers";
+import ALLFAQs from "./components/screens/ALLFAQs";
+import NotFound from "./components/screens/NotFound";
 
 const ProtectedRoute = ({ element, requiredRole }) => {
   const { isAuthenticated, userRole } = useStore((state) => state);
@@ -51,12 +53,19 @@ const App = () => {
           element={<ProtectedRoute element={<Settings />} />}
         />
         <Route
+          path="all-faqs"
+          element={<ProtectedRoute element={<ALLFAQs />} />}
+        />
+        <Route
           path="all-users"
-          element={<ProtectedRoute element={<AllUsers />} />}
+          element={
+            <ProtectedRoute element={<AllUsers />} requiredRole="SUPER_ADMIN" />
+          }
         />
       </Route>
       <Route path="/error" element={<ErrorPage />} />
       <Route path="/not-authorised" element={<NotAuthorized />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
