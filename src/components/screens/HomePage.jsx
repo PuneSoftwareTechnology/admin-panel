@@ -18,6 +18,7 @@ import { FaUsers } from "react-icons/fa";
 import LogoutModal from "../Organims/LogoutModal";
 import { FaQuestion } from "react-icons/fa";
 import { MdReviews } from "react-icons/md";
+import { ImBlogger } from "react-icons/im";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -25,6 +26,12 @@ const menuItems = [
     label: "Dashboard",
     path: "dashboard",
     icon: <HiViewGrid />,
+    role: "ADMIN",
+  },
+  {
+    label: "Blogs",
+    path: "blogs",
+    icon: <ImBlogger />,
     role: "ADMIN",
   },
   {

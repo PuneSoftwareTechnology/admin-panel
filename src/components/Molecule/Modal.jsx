@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Typography from "../atoms/Typography";
 import { MdCancel } from "react-icons/md";
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, width = "max-w-md" }) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -34,7 +34,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       onClick={handleBackdropClick}
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md relative"
+        className={`bg-white p-6 rounded-lg shadow-lg w-[90%] ${width}  relative`}
         onClick={(e) => e.stopPropagation()}
       >
         <MdCancel
@@ -48,7 +48,9 @@ const Modal = ({ isOpen, onClose, title, children }) => {
           </Typography>
         )}
 
-        <div>{children}</div>
+        <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
+          {children}
+        </div>
       </div>
     </div>
   );
