@@ -9,3 +9,13 @@ export const getDemoRequests = async () => {
     true
   );
 };
+
+export const updateDemo = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/demo/update",
+    payload,
+    "Failed to Update",
+    true
+  );
+};
