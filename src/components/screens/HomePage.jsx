@@ -17,6 +17,7 @@ import Footer from "../Molecule/Footer";
 import { FaUsers } from "react-icons/fa";
 import LogoutModal from "../Organims/LogoutModal";
 import { FaQuestion } from "react-icons/fa";
+import { MdReviews } from "react-icons/md";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -33,9 +34,15 @@ const menuItems = [
     role: "ADMIN",
   },
   {
-    label: "All Faqs",
-    path: "all-faqs",
+    label: "Faqs",
+    path: "faqs",
     icon: <FaQuestion />,
+    role: "ADMIN",
+  },
+  {
+    label: "Testmonials",
+    path: "testimonials",
+    icon: <MdReviews />,
     role: "ADMIN",
   },
   {
@@ -45,8 +52,8 @@ const menuItems = [
     role: "ADMIN",
   },
   {
-    label: "All Users",
-    path: "all-users",
+    label: "Users",
+    path: "users",
     icon: <FaUsers />,
     role: "SUPER_ADMIN",
   },

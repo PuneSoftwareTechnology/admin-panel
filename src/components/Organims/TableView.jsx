@@ -1,0 +1,77 @@
+import React from "react";
+import moment from "moment/moment";
+
+const TableView = ({ data, headers, onRowClick, onCellClick, onDelete }) => {
+  return (
+    <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table className="min-w-full border border-gray-200">
+        <thead className="bg-gray-600">
+          <tr>
+            {headers
+              .filter((header) => header !== "deleted")
+              .map((header, index) => (
+                <th key={index} className="px-4 text-white py-2 border">
+                  {header}
+                </th>
+              ))}
+            <th className="px-4 text-white py-2 border"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length > 0 ? (
+            data.map((row, index) => (
+              <tr
+                key={row.id}
+                className={
+                  index % 2 === 0
+                    ? "bg-white hover:bg-gray-100 cursor-pointer"
+                    : "bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                }
+                onClick={() => onRowClick(row)}
+              >
+                {Object.keys(row)
+                  .filter((key) => key !== "deleted") // Filter out 'deleted' key
+                  .map((key, cellIndex) => (
+                    <td
+                      key={cellIndex}
+                      className="px-4 py-2 border"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onCellClick(key, row);
+                      }}
+                    >
+                      {key === "created_at"
+                        ? moment(row[key]).format("MMMM Do YYYY, h:mm:ss a")
+                        : row[key]}
+                    </td>
+                  ))}
+                <td
+                  className="px-4 py-2 border text-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(row);
+                  }}
+                >
+                  <span className="bg-red-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
+                    Delete
+                  </span>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={headers.length}
+                className="text-center text-xl font-semibold py-4"
+              >
+                No data found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default TableView;

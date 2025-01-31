@@ -12,6 +12,7 @@ import NotAuthorized from "./components/screens/NotAuthorised";
 import AllUsers from "./components/screens/AllUsers";
 import ALLFAQs from "./components/screens/ALLFAQs";
 import NotFound from "./components/screens/NotFound";
+import AllTestimonials from "./components/screens/AllTestimonials";
 
 const ProtectedRoute = ({ element, requiredRole }) => {
   const { isAuthenticated, userRole } = useStore((state) => state);
@@ -52,12 +53,13 @@ const App = () => {
           path="settings"
           element={<ProtectedRoute element={<Settings />} />}
         />
+        <Route path="faqs" element={<ProtectedRoute element={<ALLFAQs />} />} />
         <Route
-          path="all-faqs"
-          element={<ProtectedRoute element={<ALLFAQs />} />}
+          path="testimonials"
+          element={<ProtectedRoute element={<AllTestimonials />} />}
         />
         <Route
-          path="all-users"
+          path="users"
           element={
             <ProtectedRoute element={<AllUsers />} requiredRole="SUPER_ADMIN" />
           }

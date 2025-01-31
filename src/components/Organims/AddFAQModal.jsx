@@ -6,6 +6,7 @@ import Typography from "../atoms/Typography";
 import { createFAQ, updateFAQ } from "../../APIs/faq.services";
 import { toast } from "react-toastify";
 import Modal from "../Molecule/Modal";
+import useStore from "../../utils/zustand";
 
 const relatedTopics = [
   { value: "SAP", label: "SAP Training" },
@@ -16,6 +17,7 @@ const relatedTopics = [
 ];
 
 const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
+  const email = useStore((state) => state.email);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [relatedTopic, setRelatedTopic] = useState("SAP");
@@ -62,7 +64,8 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
       question,
       answer,
       related_topic: relatedTopic,
-      id: faqData?.id, // Add id if in update mode
+      user_email: email,
+      id: faqData?.id,
     };
 
     try {
