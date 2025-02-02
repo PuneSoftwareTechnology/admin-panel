@@ -43,7 +43,7 @@ const Blogs = () => {
     try {
       const response = await updateBlog({
         id: selectedBlog?.id,
-        status: "ARCHIVED",
+        deleted: true,
       });
       if (response?.success) {
         toast.success("Blog deleted successfully");
@@ -67,6 +67,20 @@ const Blogs = () => {
 
   const headers = ["ID", "Title", "Slug", "Created At", "Author", "Status"];
 
+  const colorScheme = {
+    DRAFT: "bg-yellow-400",
+    PUBLISHED: "bg-green-700",
+    ARCHIVED: "bg-red-700",
+  };
+  const customComponents = {
+    Status: ({ value }) => (
+      <span
+        className={`text-white text-xs font-semibold px-2 py-1 rounded-md ${colorScheme[value]}`}
+      >
+        {value}
+      </span>
+    ),
+  };
   const formattedBlogs = blogs.map((blog) => ({
     id: blog.id,
     title: blog.title,
@@ -91,6 +105,7 @@ const Blogs = () => {
       <TableView
         headers={headers}
         data={formattedBlogs}
+        columnStyleMap={customComponents}
         onRowClick={(row) => {
           setSelectedBlog(row);
           setOpenAddModal(true);

@@ -7,6 +7,7 @@ const TableView = ({
   onRowClick = () => {},
   onCellClick,
   onDelete,
+  columnStyleMap = {},
 }) => {
   return (
     <div className="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -36,23 +37,31 @@ const TableView = ({
                 onClick={() => onRowClick(row)}
               >
                 {Object.keys(row)
-                  .filter((key) => key !== "deleted") // Filter out 'deleted' key
-                  .map((key, cellIndex) => (
-                    <td
-                      key={cellIndex}
-                      className="px-4 py-2 border"
-                      onClick={(e) => {
-                        if (onCellClick) {
-                          e.stopPropagation();
-                          onCellClick(key, row);
-                        }
-                      }}
-                    >
-                      {key === "created_at"
-                        ? moment(row[key]).format("MMM Do YY, h:mm a")
-                        : row[key]}
-                    </td>
-                  ))}
+                  .filter((key) => key !== "deleted")
+                  .map((key, cellIndex) => {
+                    const columnName = headers[cellIndex];
+                    const ColumnComponent = columnStyleMap[columnName];
+                    return (
+                      <td
+                        key={cellIndex}
+                        className="px-4 py-2 border"
+                        onClick={(e) => {
+                          if (onCellClick) {
+                            e.stopPropagation();
+                            onCellClick(key, row);
+                          }
+                        }}
+                      >
+                        {key === "created_at" ? (
+                          moment(row[key]).format("MMM Do YY, h:mm a")
+                        ) : ColumnComponent ? (
+                          <ColumnComponent value={row[key]} />
+                        ) : (
+                          row[key]
+                        )}
+                      </td>
+                    );
+                  })}
                 {!!onDelete && (
                   <td
                     className="px-4 py-2 border text-center"

@@ -196,7 +196,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
         <div className="flex justify-end">
           <PrimaryButton
             type="submit"
-            disabled={!uploadedUrl || !formData["image"]}
+            disabled={!uploadedUrl}
             loading={loading}
           >
             {blogId ? "Update Blog" : "Add Blog"}
