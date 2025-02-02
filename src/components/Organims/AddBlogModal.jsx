@@ -122,9 +122,11 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
               ...blog,
               tertiary_content_points: blog.tertiary_content_points || [], // Ensure it's an array
             });
-            if (blog.tertiary_content_points) {
-              // Initialize bullet points if they exist
-              blog.tertiary_content_points.forEach((point) => addPoint(point));
+
+            if (blog?.tertiary_content_points) {
+              JSON.parse(blog?.tertiary_content_points).forEach((point) =>
+                addPoint(point)
+              );
             }
           }
         } catch (err) {
@@ -154,17 +156,21 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     const blogPayload = {
       ...formData,
       author_id: email,
-      featured_image: uploadStates.featured_image?.uploadedUrl || null,
+      featured_image:
+        uploadStates.featured_image?.uploadedUrl || formData.featured_image,
       primary_content_image:
-        uploadStates.primary_content_image?.uploadedUrl || null,
+        uploadStates.primary_content_image?.uploadedUrl ||
+        formData.primary_content_image,
       secondary_content_image:
-        uploadStates.secondary_content_image?.uploadedUrl || null,
+        uploadStates.secondary_content_image?.uploadedUrl ||
+        formData.secondary_content_image,
       tertiary_content_points: points, // Use the bullet points from the hook
     };
 
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
+    console.log(blogPayload, "blogPayload");
 
     try {
       const response = blogId
@@ -187,7 +193,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       clearState("secondary_content_image");
     }
   };
-  console.log(formData, ">?>?>?>?>?>?>?>?>?>>?>");
 
   return (
     <Modal

@@ -5,7 +5,10 @@ const useBulletPoints = (initialPoints = []) => {
 
   const addPoint = (point) => {
     if (point.trim()) {
-      setPoints([...points, point]);
+      setPoints((prevPoints) => {
+        const updatedPoints = [...prevPoints, point.trim()];
+        return [...new Set(updatedPoints)];
+      });
     }
   };
 
