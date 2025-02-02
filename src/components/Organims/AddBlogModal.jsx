@@ -7,6 +7,7 @@ import DropDown from "../atoms/DropDown";
 import { createBlog, fetchOneBlog, updateBlog } from "../../APIs/blog.services";
 import { toast } from "react-toastify";
 import Typography from "../atoms/Typography";
+import useFileUpload from "../../hooks/useUploadFile";
 
 // Category and Status options
 const categoryOptions = [
@@ -41,6 +42,8 @@ const inputFields = [
 ];
 
 const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
+  const { UploadButton, uploadedUrl } = useFileUpload();
+
   const email = useStore((state) => state.email);
   const [formData, setFormData] = useState({
     title: "",
@@ -52,7 +55,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     conclusion: "",
     image: null,
   });
-  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -73,7 +75,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
               conclusion: blog.conclusion || "",
               image: blog.featured_image || null,
             });
-            setImagePreview(blog.featured_image || null);
           }
         } catch (err) {
           console.error("Error fetching blog:", err);
@@ -82,14 +83,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       fetchBlog();
     }
   }, [blogId]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -111,9 +104,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       ...formData,
       main_content: formData?.content,
       author_id: email,
-      featured_image:
-        formData?.image ||
-        "https://imgs.search.brave.com/PjE33tVn9FgNIvLyiXIda3Iuc-QnbB3f_cexAHHWsHU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9idXJz/dC5zaG9waWZ5Y2Ru/LmNvbS9waG90b3Mv/YS1kcm9wLW9mLXBp/bmstYW5kLXllbGxv/dy1wYWludC1pbi13/YXRlci5qcGc_d2lk/dGg9MTAwMCZmb3Jt/YXQ9cGpwZyZleGlm/PTAmaXB0Yz0w",
+      featured_image: uploadedUrl,
       id: blogId,
     };
     delete blogPayload?.content;
@@ -121,8 +112,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     if (!blogId) {
       delete blogPayload?.id;
     }
-
-    console.log(blogPayload);
 
     try {
       const response = blogId
@@ -173,14 +162,15 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
                 onChange={handleChange}
               />
             ) : field.type === "file" ? (
-              <input
-                type="file"
-                id={field.id}
-                name={field.id}
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
+              formData[field?.id] ? (
+                <img
+                  src={formData[field?.id]}
+                  alt="Image Preview"
+                  className="w-50 h-50 rounded-md object-cover mx-auto"
+                />
+              ) : (
+                <UploadButton />
+              )
             ) : (
               <InputBox
                 id={field.id}
@@ -203,16 +193,12 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
           </div>
         ))}
 
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Image Preview"
-            className="mt-2 max-w-full h-auto rounded-md"
-          />
-        )}
-
         <div className="flex justify-end">
-          <PrimaryButton type="submit" loading={loading}>
+          <PrimaryButton
+            type="submit"
+            disabled={!uploadedUrl || !formData["image"]}
+            loading={loading}
+          >
             {blogId ? "Update Blog" : "Add Blog"}
           </PrimaryButton>
         </div>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import Loader from "../components/atoms/Loader";
 
 const UPLOAD_URL = "https://api.imgbb.com/1/upload";
 const API_KEY = "0cc73818100d94431369ba1bc02193f5";
@@ -63,15 +62,13 @@ const useFileUpload = () => {
 
       {/* Loader or Image preview */}
       <div className="mt-4 flex justify-start items-center">
-        {isUploading ? (
-          <Loader className={"mx-10 my-10 "} />
-        ) : uploadedUrl ? (
+        {uploadedUrl && (
           <img
             src={uploadedUrl}
             alt="Image Preview"
             className="w-50 h-50 rounded-md object-cover mx-auto"
           />
-        ) : null}
+        )}
       </div>
     </div>
   );
