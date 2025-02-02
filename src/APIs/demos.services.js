@@ -19,3 +19,13 @@ export const updateDemo = async (payload) => {
     true
   );
 };
+
+export const deleteDemo = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/demo/delete",
+    payload,
+    "Failed to delete",
+    true
+  );
+};

@@ -39,3 +39,13 @@ export const deleteUser = async (payload) => {
     true
   );
 };
+
+export const updateAdminUser = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/admin/update-user",
+    payload,
+    "Failed to update user.",
+    true
+  );
+};

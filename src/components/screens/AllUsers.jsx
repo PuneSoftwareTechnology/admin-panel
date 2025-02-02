@@ -2,29 +2,35 @@ import React, { useEffect, useState } from "react";
 import { deleteUser, getAllUsers } from "../../APIs/admin.services";
 import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
-import moment from "moment/moment";
+import TableView from "../Organims/TableView";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
+import PrimaryButton from "../atoms/PrimaryButton";
+import { useNavigate } from "react-router-dom";
+import { MdAdd } from "react-icons/md";
+import CreateUserModal from "../Organims/CreateUserModal";
 
 const UsersTable = () => {
   const [usersData, setUsersData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState();
+  const [selectedUser, setSelectedUser] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const navigate = useNavigate();
 
   const fetchAllUsers = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const allUsers = await getAllUsers();
-
-      if (allUsers.success && Array.isArray(allUsers.data)) {
-        setUsersData([...allUsers.data]);
+      const response = await getAllUsers();
+      if (response?.success && Array.isArray(response?.data)) {
+        setUsersData(response.data);
       } else {
-        console.error("Unexpected API Response:", allUsers);
+        setUsersData([]);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
+      setUsersData([]);
     } finally {
       setLoading(false);
     }
@@ -34,87 +40,97 @@ const UsersTable = () => {
     fetchAllUsers();
   }, []);
 
-  const deleteAdminUSer = async () => {
+  const deleteAdminUser = async () => {
     if (!selectedUser) return;
-
     setDeleteLoading(true);
-    const response = await deleteUser({ email: selectedUser?.email });
-
-    if (response?.success) {
-      toast.success("User deleted successfully");
-      setOpenModal(false);
-      fetchAllUsers(); // Refetch the user data after successful deletion
-    } else {
-      toast.error("Error deleting user");
+    try {
+      const response = await deleteUser({ email: selectedUser?.email });
+      if (response?.success) {
+        toast.success("User deleted successfully");
+        setUsersData(
+          usersData.filter((user) => user.email !== selectedUser.email)
+        );
+        setOpenModal(false);
+      } else {
+        toast.error("Error deleting user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("An error occurred while deleting user");
+    } finally {
+      setDeleteLoading(false);
     }
-    setDeleteLoading(false);
   };
 
   if (loading) {
-    return <Loader className={"mx-auto mt-32 border-gray-900"} size="large" />;
+    return <Loader className="mx-auto mt-32 border-gray-900" size="large" />;
   }
 
+  const formattedData = usersData.map((user, index) => ({
+    id: user.id || index,
+    name: user.name || "",
+    username: user.username || "",
+    email: user.email || "",
+    role: user.role || "",
+    created_at: user.createdAt,
+  }));
+
+  const colorScheme = {
+    ADMIN: "bg-yellow-400",
+    SUPER_ADMIN: "bg-green-700",
+  };
+
+  const customComponents = {
+    Role: ({ value }) => (
+      <span
+        className={`text-white text-xs font-semibold px-2 py-1 rounded-md ${colorScheme[value]}`}
+      >
+        {value}
+      </span>
+    ),
+  };
   return (
-    <div className="overflow-x-auto p-4">
-      {usersData.length === 0 ? (
-        <Typography variant="h5" className="text-center mt-8">
-          No Active Users
-        </Typography>
-      ) : (
-        <table className="min-w-full bg-white border border-gray-500 shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-600">
-              <th className="px-4 text-white py-2 border">ID</th>
-              <th className="px-4 text-white py-2 border">Name</th>
-              <th className="px-4 text-white py-2 border">Username</th>
-              <th className="px-4 text-white py-2 border">Email</th>
-              <th className="px-4 text-white py-2 border">Role</th>
-              <th className="px-4 text-white py-2 border">Created At</th>
-              <th className="px-4 text-white py-2 border"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {usersData.map((user, index) => (
-              <tr
-                key={user.id}
-                className={
-                  index % 2 === 0
-                    ? "bg-white hover:bg-gray-100"
-                    : "bg-gray-200 hover:bg-gray-300"
-                }
-              >
-                <td className="px-4 py-2 border text-center">{index}</td>
-                <td className="px-4 py-2 border">{user.name}</td>
-                <td className="px-4 py-2 border">{user.username}</td>
-                <td className="px-4 py-2 border">{user.email}</td>
-                <td className="px-4 py-2 border text-center font-semibold">
-                  {user.role}
-                </td>
-                <td className="px-4 py-2 border text-center">
-                  {moment(user.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
-                </td>
-                <td
-                  className="px-4 py-2 border text-center "
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setOpenModal(true);
-                  }}
-                >
-                  <span className="bg-red-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
-                    Delete
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="container mx-auto p-4">
+      <div className="flex justify-between items-center mb-4">
+        <Typography variant="h3">Users</Typography>
+        <PrimaryButton
+          onClick={() => {
+            setOpenCreateModal(true);
+          }}
+        >
+          <MdAdd size={24} color="white" /> Add User
+        </PrimaryButton>
+      </div>
+
+      <TableView
+        data={formattedData}
+        columnStyleMap={customComponents}
+        headers={["ID", "Name", "Username", "Email", "Role", "Created At"]}
+        onDelete={(user) => {
+          setSelectedUser(user);
+          setOpenModal(true);
+        }}
+        onRowClick={(user) => {
+          setSelectedUser(user);
+          setOpenCreateModal(true);
+        }}
+      />
+      {openCreateModal && (
+        <CreateUserModal
+          isOpen={openCreateModal}
+          onClose={() => {
+            fetchAllUsers();
+            setOpenCreateModal(false);
+          }}
+          user={selectedUser}
+        />
       )}
 
       {openModal && (
         <DeleteModal
           isOpen={openModal}
           onClose={() => setOpenModal(false)}
-          onDelete={deleteAdminUSer}
+          onDelete={deleteAdminUser}
           loading={deleteLoading}
         />
       )}

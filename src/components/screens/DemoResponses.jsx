@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getDemoRequests } from "../../APIs/demos.services";
+import {
+  deleteDemo,
+  getDemoRequests,
+  updateDemo,
+} from "../../APIs/demos.services";
 import Loader from "../atoms/Loader";
 import ErrorPage from "./ErrorPage";
 import Typography from "../atoms/Typography";
 import UpdateDemoRequestModal from "../Organims/UpdateDemoRequestModal";
 import TableView from "../Organims/TableView";
+import DeleteModal from "../Organims/DeleteModal";
+import { toast } from "react-toastify";
 
 const DemoRequests = () => {
   const [demoRequests, setDemoRequests] = useState(null);
@@ -12,6 +18,8 @@ const DemoRequests = () => {
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedDemo, setSelectedDemo] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchDemoRequests = async () => {
     try {
@@ -59,6 +67,30 @@ const DemoRequests = () => {
       created_at: request?.created_at,
     })) || [];
 
+  const deleteDemoAPICALL = async () => {
+    setDeleteLoading(true);
+    try {
+      const response = await deleteDemo({ id: selectedDemo?.index });
+      console.log(response, "response");
+
+      if (response?.success) {
+        toast.success("Demo deleted successfully");
+        setDemoRequests(
+          demoRequests.filter((demo) => demo.id !== selectedDemo?.id)
+        );
+        setDeleteModal(false);
+        fetchDemoRequests();
+      } else {
+        toast.error("Failed to delete Demo");
+      }
+    } catch (err) {
+      console.error("Error deleting Demo:", err);
+      toast.error("An error occurred while deleting Demo");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6">
       <Typography variant="h4">Demo Requests</Typography>
@@ -66,6 +98,10 @@ const DemoRequests = () => {
         <TableView
           headers={headers}
           data={formattedData}
+          onDelete={(row) => {
+            setDeleteModal(true);
+            setSelectedDemo(row);
+          }}
           onRowClick={(row) => {
             console.log("lrskjhgn;o4tlkh");
             setSelectedDemo(row);
@@ -86,6 +122,14 @@ const DemoRequests = () => {
         }}
         demoRequest={selectedDemo}
       />
+      {deleteModal && (
+        <DeleteModal
+          isOpen={deleteModal}
+          onClose={() => setDeleteModal(false)}
+          onDelete={deleteDemoAPICALL}
+          loading={deleteLoading}
+        />
+      )}
     </div>
   );
 };

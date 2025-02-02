@@ -42,13 +42,14 @@ const UpdateDemoRequestModal = ({ isOpen, onClose, demoRequest }) => {
       <div className="space-y-4">
         <div>
           <Typography variant="body1">Comment</Typography>
-          <InputBox
+          <textarea
             id="comment"
             name="comment"
-            type="text"
             placeholder="Enter your comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="4"
           />
         </div>
         <div>

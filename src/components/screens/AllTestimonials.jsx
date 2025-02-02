@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../atoms/Loader";
-import PrimaryButton from "../atoms/PrimaryButton";
-import { MdAdd } from "react-icons/md";
 import Typography from "../atoms/Typography";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";

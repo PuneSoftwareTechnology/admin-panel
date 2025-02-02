@@ -7,7 +7,7 @@ import AddFAQModal from "../Organims/AddFAQModal";
 import Typography from "../atoms/Typography";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
-import moment from "moment/moment";
+import TableView from "../Organims/TableView";
 
 const AllFAQs = () => {
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,6 @@ const AllFAQs = () => {
         toast.success("FAQ deleted successfully");
         setFaqs(faqs.filter((faq) => faq.id !== selectedFaq?.id));
         setDeleteModal(false);
-        fetchFAQsAPICall();
       } else {
         toast.error("Failed to delete FAQ");
       }
@@ -62,87 +61,38 @@ const AllFAQs = () => {
     return <Loader className="mx-auto mt-32 border-gray-900" size="large" />;
   }
 
-  const openAddModalHandler = () => {
-    setOpenAddModal(true);
-    setDeleteModal(false); // Ensure delete modal is closed when add modal is opened
-  };
-
-  const openDeleteModalHandler = (faq) => {
-    setSelectedFaq(faq);
-    setDeleteModal(true);
-    setOpenAddModal(false); // Ensure add modal is closed when delete modal is opened
-  };
+  const formattedData =
+    faqs?.map((request, index) => ({
+      id: request?.id || index,
+      question: request.question || "",
+      answer: request.answer || "",
+      related_topic: request.related_topic || "",
+      created_at: request?.created_at,
+    })) || [];
 
   return (
     <div className="container mx-auto p-4">
       {/* Add FAQ Button */}
       <div className="flex justify-between items-center mb-4">
         <Typography variant="h3">FAQs</Typography>
-        <PrimaryButton onClick={openAddModalHandler}>
-          <MdAdd size={24} color="white" />
-          Add FAQ
+        <PrimaryButton onClick={() => setOpenAddModal(true)}>
+          <MdAdd size={24} color="white" /> Add FAQ
         </PrimaryButton>
       </div>
 
       {/* FAQs Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full border border-gray-200">
-          <thead className="bg-gray-600">
-            <tr>
-              <th className="px-4 text-white py-2 border">Question</th>
-              <th className="px-4 text-white py-2 border">Answer</th>
-              <th className="px-4 text-white py-2 border">Related Topic</th>
-              <th className="px-4 text-white py-2 border">Created at</th>
-              <th className="px-4 text-white py-2 border"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {faqs.length > 0 ? (
-              faqs.map((faq, index) => (
-                <tr
-                  key={faq.id}
-                  className={
-                    index % 2 === 0
-                      ? "bg-white hover:bg-gray-100 cursor-pointer"
-                      : "bg-gray-200 hover:bg-gray-300  cursor-pointer"
-                  }
-                  onClick={() => {
-                    setSelectedFaq(faq);
-                    openAddModalHandler();
-                  }}
-                >
-                  <td className="px-4 py-2 border">{faq.question}</td>
-                  <td className="px-4 py-2 border">{faq.answer}</td>
-                  <td className="px-4 py-2 border">{faq.related_topic}</td>
-                  <td className="px-4 py-2 border">
-                    {moment(faq.created_at).format("MMMM Do YYYY, h:mm:ss a")}
-                  </td>
-                  <td
-                    className="px-4 py-2 border text-center "
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent triggering the row click
-                      openDeleteModalHandler(faq);
-                    }}
-                  >
-                    <span className="bg-red-600 text-white px-2 py-1 rounded-md text-sm font-semibold">
-                      Delete
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="4"
-                  className="text-center text-xl font-semibold py-4"
-                >
-                  No FAQs found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <TableView
+        data={formattedData}
+        headers={["ID", "Question", "Answer", "Related Topic", "Created at"]}
+        onRowClick={(faq) => {
+          setSelectedFaq(faq);
+          setOpenAddModal(true);
+        }}
+        onDelete={(faq) => {
+          setSelectedFaq(faq);
+          setDeleteModal(true);
+        }}
+      />
 
       {/* FAQ Modal */}
       {openAddModal && (
@@ -156,6 +106,7 @@ const AllFAQs = () => {
           faqData={selectedFaq}
         />
       )}
+
       {/* Delete Modal */}
       {deleteModal && (
         <DeleteModal
