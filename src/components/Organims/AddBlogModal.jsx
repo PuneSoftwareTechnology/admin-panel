@@ -8,6 +8,8 @@ import { createBlog, fetchOneBlog, updateBlog } from "../../APIs/blog.services";
 import { toast } from "react-toastify";
 import Typography from "../atoms/Typography";
 import useFileUpload from "../../hooks/useUploadFile";
+import BulletPointsInput from "../Molecule/BulletPointsInput";
+import useBulletPoints from "../../hooks/useBulletPoints";
 
 // Category and Status options
 const categoryOptions = [
@@ -26,12 +28,53 @@ const statusOptions = [
 
 // Input fields configuration
 const inputFields = [
-  { id: "title", label: "Title", type: "text", required: true },
   { id: "slug", label: "Slug", type: "text", required: true },
-  { id: "content", label: "Content", type: "textarea", required: true },
+  { id: "title", label: "Title", type: "text", required: true },
+  { id: "featured_image", label: "Featured Image", type: "file" },
   { id: "introduction", label: "Introduction", type: "textarea" },
+  { id: "primary_content_title", label: "Primary Content Title", type: "text" },
+  {
+    id: "primary_content_intro",
+    label: "Primary Content Intro",
+    type: "textarea",
+  },
+  { id: "primary_content_image", label: "Primary Content Image", type: "file" },
+  {
+    id: "primary_content_text",
+    label: "Primary Content Text",
+    type: "textarea",
+  },
+  {
+    id: "secondary_content_title",
+    label: "Secondary Content Title",
+    type: "text",
+  },
+  {
+    id: "secondary_content_intro",
+    label: "Secondary Content Intro",
+    type: "textarea",
+  },
+  {
+    id: "secondary_content_image",
+    label: "Secondary Content Image",
+    type: "file",
+  },
+  {
+    id: "secondary_content_text",
+    label: "Secondary Content Text",
+    type: "textarea",
+  },
+  {
+    id: "tertiary_content_title",
+    label: "Tertiary Content Title",
+    type: "text",
+  },
+  {
+    id: "tertiary_content_points",
+    label: "Tertiary Content Points",
+    type: "custom", // Mark this as a custom field
+  },
   { id: "conclusion", label: "Conclusion", type: "textarea" },
-  { id: "image", label: "Featured Image", type: "file" },
   {
     id: "category",
     label: "Category",
@@ -42,18 +85,28 @@ const inputFields = [
 ];
 
 const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
-  const { UploadButton, uploadedUrl } = useFileUpload();
+  const { UploadButton, uploadStates, clearState } = useFileUpload();
+  const { points, addPoint, removePoint } = useBulletPoints([]);
 
   const email = useStore((state) => state.email);
   const [formData, setFormData] = useState({
+    slug: "",
     title: "",
-    content: "",
+    featured_image: null,
+    introduction: "",
+    primary_content_title: "",
+    primary_content_intro: "",
+    primary_content_image: null,
+    primary_content_text: "",
+    secondary_content_title: "",
+    secondary_content_intro: "",
+    secondary_content_image: null,
+    secondary_content_text: "",
+    tertiary_content_title: "",
+    tertiary_content_points: [],
+    conclusion: "",
     category: "SAP",
     status: "Draft",
-    slug: "",
-    introduction: "",
-    conclusion: "",
-    image: null,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -66,15 +119,13 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
           if (response?.success) {
             const blog = response.data;
             setFormData({
-              title: blog.title || "",
-              content: blog.main_content || "",
-              category: blog.category || "SAP",
-              status: blog.status || "PUBLISHED",
-              slug: blog.slug || "",
-              introduction: blog.introduction || "",
-              conclusion: blog.conclusion || "",
-              image: blog.featured_image || null,
+              ...blog,
+              tertiary_content_points: blog.tertiary_content_points || [], // Ensure it's an array
             });
+            if (blog.tertiary_content_points) {
+              // Initialize bullet points if they exist
+              blog.tertiary_content_points.forEach((point) => addPoint(point));
+            }
           }
         } catch (err) {
           console.error("Error fetching blog:", err);
@@ -94,24 +145,26 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     setLoading(true);
     setError("");
 
-    if (!formData.title || !formData.content) {
-      setError("Title and Content are required");
+    if (!formData.slug || !formData.title) {
+      setError("Slug and Title are required");
       setLoading(false);
       return;
     }
 
     const blogPayload = {
       ...formData,
-      main_content: formData?.content,
       author_id: email,
-      featured_image: uploadedUrl,
-      id: blogId,
+      featured_image: uploadStates.featured_image?.uploadedUrl || null,
+      primary_content_image:
+        uploadStates.primary_content_image?.uploadedUrl || null,
+      secondary_content_image:
+        uploadStates.secondary_content_image?.uploadedUrl || null,
+      tertiary_content_points: points, // Use the bullet points from the hook
     };
-    delete blogPayload?.content;
-    delete blogPayload?.image;
-    if (!blogId) {
-      delete blogPayload?.id;
-    }
+
+    delete blogPayload["file-upload-featured_image"];
+    delete blogPayload["file-upload-primary_content_image"];
+    delete blogPayload["file-upload-secondary_content_image"];
 
     try {
       const response = blogId
@@ -129,8 +182,12 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       toast.error("An error occurred while processing your request");
     } finally {
       setLoading(false);
+      clearState("featured_image");
+      clearState("primary_content_image");
+      clearState("secondary_content_image");
     }
   };
+  console.log(formData, ">?>?>?>?>?>?>?>?>?>>?>");
 
   return (
     <Modal
@@ -142,7 +199,9 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {inputFields.map((field) => (
           <div key={field.id}>
-            <Typography variant="h6">{field.label}</Typography>
+            <Typography variant="h6" className="mb-2">
+              {field.label}
+            </Typography>
             {field.type === "textarea" ? (
               <textarea
                 id={field.id}
@@ -162,15 +221,35 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
                 onChange={handleChange}
               />
             ) : field.type === "file" ? (
-              formData[field?.id] ? (
-                <img
-                  src={formData[field?.id]}
-                  alt="Image Preview"
-                  className="w-50 h-50 rounded-md object-cover mx-auto"
-                />
-              ) : (
-                <UploadButton />
-              )
+              <>
+                {uploadStates[field.id]?.uploadedUrl && (
+                  <img
+                    src={uploadStates[field.id].uploadedUrl}
+                    alt={field.label}
+                    className="w-50 h-50 rounded-md object-cover mx-auto"
+                  />
+                )}
+                {formData[field?.id] ? (
+                  <img
+                    src={formData[field?.id]}
+                    alt="Image Preview"
+                    className="w-50 h-50 rounded-md object-cover mx-auto"
+                  />
+                ) : (
+                  <UploadButton
+                    fieldId={field.id}
+                    showImage={false}
+                    onChange={(e) => handleChange(e)}
+                  />
+                )}
+              </>
+            ) : field.type === "custom" &&
+              field.id === "tertiary_content_points" ? (
+              <BulletPointsInput
+                points={points}
+                onAddPoint={addPoint}
+                onRemovePoint={removePoint}
+              />
             ) : (
               <InputBox
                 id={field.id}
@@ -194,11 +273,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
         ))}
 
         <div className="flex justify-end">
-          <PrimaryButton
-            type="submit"
-            disabled={!uploadedUrl}
-            loading={loading}
-          >
+          <PrimaryButton type="submit" disabled={loading} loading={loading}>
             {blogId ? "Update Blog" : "Add Blog"}
           </PrimaryButton>
         </div>
