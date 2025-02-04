@@ -58,7 +58,7 @@ const EmailNotifications = () => {
           <Loader
             size="large"
             ariaLabel="Loading emails..."
-            className="bg-gray-600 mx-auto my-16"
+            className="border-gray-600 mx-auto my-16"
           />
         ) : (
           <TableView
