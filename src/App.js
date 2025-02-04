@@ -6,7 +6,6 @@ import HomePage from "./components/screens/HomePage";
 import Dashboard from "./components/screens/Dashboard";
 import Settings from "./components/screens/Settings";
 import DemoRequests from "./components/screens/DemoResponses";
-import CreateUser from "./components/screens/CreateUser";
 import ErrorPage from "./components/screens/ErrorPage";
 import NotAuthorized from "./components/screens/NotAuthorised";
 import AllUsers from "./components/screens/AllUsers";
@@ -15,30 +14,30 @@ import NotFound from "./components/screens/NotFound";
 import AllTestimonials from "./components/screens/AllTestimonials";
 import Blogs from "./components/screens/Blogs";
 
-const ProtectedRoute = ({ element, requiredRole }) => {
-  const { isAuthenticated, userRole } = useStore((state) => state);
+const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
+  const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
+
   const navigateTo = useMemo(() => {
     if (!isAuthenticated) return "/admin-login";
-    if (requiredRole && userRole !== requiredRole) return "/not-authorised";
-    return null; // Proceed to the element
-  }, [isAuthenticated, userRole, requiredRole]);
+    if (redirectIfAuth && isAuthenticated) return "/home"; // Redirect logged-in users from login page
+    if (requiredRole === "SUPER_ADMIN" && userRole === "ADMIN")
+      return "/not-authorised"; // Block ADMIN from SUPER_ADMIN routes
+    return null;
+  }, [isAuthenticated, userRole, requiredRole, redirectIfAuth]);
 
-  if (navigateTo) {
-    return <Navigate to={navigateTo} />;
-  }
-  return element;
+  return navigateTo ? <Navigate to={navigateTo} /> : element;
 };
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<AdminLogin />} />
-      <Route path="/admin-login" element={<AdminLogin />} />
       <Route
-        path="/create-user"
-        element={
-          <ProtectedRoute element={<CreateUser />} requiredRole="SUPER_ADMIN" />
-        }
+        path="/"
+        element={<ProtectedRoute element={<Navigate to="/admin-login" />} />}
+      />
+      <Route
+        path="/admin-login"
+        element={<ProtectedRoute element={<AdminLogin />} redirectIfAuth />}
       />
       <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}>
         <Route index element={<div>Welcome to Home</div>} />
