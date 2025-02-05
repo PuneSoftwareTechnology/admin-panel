@@ -19,6 +19,7 @@ import LogoutModal from "../Organims/LogoutModal";
 import { FaQuestion } from "react-icons/fa";
 import { MdReviews } from "react-icons/md";
 import { ImBlogger } from "react-icons/im";
+import { MdAlignHorizontalLeft } from "react-icons/md";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -63,6 +64,12 @@ const menuItems = [
     path: "users",
     icon: <FaUsers />,
     role: "SUPER_ADMIN",
+  },
+  {
+    label: "Miscellaneous",
+    path: "misc",
+    icon: <MdAlignHorizontalLeft />,
+    role: "ADMIN",
   },
   {
     label: "Logout",

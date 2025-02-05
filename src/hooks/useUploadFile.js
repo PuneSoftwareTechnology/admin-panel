@@ -53,59 +53,61 @@ const useFileUpload = () => {
     }
   };
 
-  const UploadButton = ({ fieldId, showImage = true, onChange }) => (
-    <div className="upload-button-wrapper">
-      <input
-        type="file"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          uploadFile(file, fieldId);
-          if (onChange) onChange(e);
-        }}
-        style={{ display: "none" }}
-        id={`file-upload-${fieldId}`}
-      />
-      <label
-        htmlFor={`file-upload-${fieldId}`}
-        className="styled-upload-button"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "8px",
-          backgroundColor: "#3b82f6", // Blue background
-          color: "white",
-          padding: "8px 16px",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "14px",
-          fontWeight: "500",
-          transition: "background-color 0.2s ease",
-        }}
-      >
-        {uploadStates[fieldId]?.isUploading ? (
-          <>
-            <Loader size="small" /> {/* Use your existing Loader component */}
-            <span>Uploading</span>
-          </>
-        ) : (
-          <>
-            <BiSolidCloudUpload size={24} />
-            <span>Upload File</span>
-          </>
+  const UploadButton = ({ fieldId, showImage = true, onChange }) => {
+    return (
+      <div className="upload-button-wrapper">
+        <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            uploadFile(file, fieldId);
+            if (onChange) onChange(e);
+          }}
+          style={{ display: "none" }}
+          id={`file-upload-${fieldId}`}
+        />
+        <label
+          htmlFor={`file-upload-${fieldId}`}
+          className="styled-upload-button"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            backgroundColor: "#3b82f6", // Blue background
+            color: "white",
+            padding: "8px 16px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            transition: "background-color 0.2s ease",
+          }}
+        >
+          {uploadStates[fieldId]?.isUploading ? (
+            <>
+              <Loader size="small" /> {/* Use your existing Loader component */}
+              <span>Uploading</span>
+            </>
+          ) : (
+            <>
+              <BiSolidCloudUpload size={24} />
+              <span>Upload File</span>
+            </>
+          )}
+        </label>
+        {showImage && uploadStates[fieldId]?.uploadedUrl && (
+          <div className="mt-4">
+            <img
+              src={uploadStates[fieldId].uploadedUrl}
+              alt="Uploaded"
+              className="w-50 h-50 rounded-md object-cover mx-auto"
+            />
+          </div>
         )}
-      </label>
-      {showImage && uploadStates[fieldId]?.uploadedUrl && (
-        <div className="mt-4">
-          <img
-            src={uploadStates[fieldId].uploadedUrl}
-            alt="Uploaded"
-            className="w-50 h-50 rounded-md object-cover mx-auto"
-          />
-        </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  };
 
   const clearState = (fieldId) => {
     setUploadStates((prev) => ({

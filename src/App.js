@@ -13,6 +13,7 @@ import ALLFAQs from "./components/screens/ALLFAQs";
 import NotFound from "./components/screens/NotFound";
 import AllTestimonials from "./components/screens/AllTestimonials";
 import Blogs from "./components/screens/Blogs";
+import Misc from "./components/screens/Misc";
 
 const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
@@ -65,6 +66,7 @@ const App = () => {
             <ProtectedRoute element={<AllUsers />} requiredRole="SUPER_ADMIN" />
           }
         />
+        <Route path="misc" element={<ProtectedRoute element={<Misc />} />} />
       </Route>
       <Route path="/error" element={<ErrorPage />} />
       <Route path="/not-authorised" element={<NotAuthorized />} />
