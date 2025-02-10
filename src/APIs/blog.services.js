@@ -24,10 +24,10 @@ export const createBlog = async (payload) => {
   );
 };
 
-export const fetchOneBlog = async (id) => {
+export const fetchOneBlog = async (slug) => {
   return await apiRequest(
     "GET",
-    `/blog/?id=${id}`,
+    `/blog/?slug=${slug}`,
     null,
     "Failed to Fetch",
     false

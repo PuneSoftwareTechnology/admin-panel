@@ -125,7 +125,7 @@ const Blogs = () => {
             setOpenAddModal(false);
             fetchBlogsAPICall();
           }}
-          blogId={selectedBlog?.id}
+          blogId={selectedBlog?.slug}
         />
       )}
 

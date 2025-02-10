@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOCAL_URL } from "../utils/urls";
+import { BASE_URL } from "../utils/urls";
 
 export const apiRequest = async (
   method,
@@ -9,7 +9,7 @@ export const apiRequest = async (
   requireAuth = false
 ) => {
   try {
-    const url = `${LOCAL_URL}${endpoint}`;
+    const url = `${BASE_URL}${endpoint}`;
     const token = requireAuth
       ? JSON.parse(localStorage.getItem("zustandStore"))?.jwtToken
       : null;
