@@ -23,6 +23,7 @@ import { MdAlignHorizontalLeft } from "react-icons/md";
 import { FaBookReader } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { GiPoliceBadge } from "react-icons/gi";
+import { FaBookOpen } from "react-icons/fa"; // Add this import
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -90,6 +91,12 @@ const menuItems = [
     label: "Miscellaneous",
     path: "misc",
     icon: <MdAlignHorizontalLeft />,
+    role: "ADMIN",
+  },
+  {
+    label: "Syllabus",
+    path: "syllabus",
+    icon: <FaBookOpen />,
     role: "ADMIN",
   },
   {

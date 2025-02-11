@@ -17,6 +17,7 @@ import Misc from "./components/screens/Misc";
 import Courses from "./components/screens/Courses";
 import Jobs from "./components/screens/Jobs";
 import Projects from "./components/screens/Projects";
+import Syllabus from "./components/screens/Syllabus"; // Add this import
 
 const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
@@ -79,6 +80,10 @@ const App = () => {
           }
         />
         <Route path="misc" element={<ProtectedRoute element={<Misc />} />} />
+        <Route
+          path="syllabus"
+          element={<ProtectedRoute element={<Syllabus />} />}
+        />
       </Route>
       <Route path="/error" element={<ErrorPage />} />
       <Route path="/not-authorised" element={<NotAuthorized />} />
