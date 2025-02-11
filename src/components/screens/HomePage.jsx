@@ -129,7 +129,7 @@ const HomePage = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 w-60 bg-gray-800 text-white h-screen transform ${
+        className={`fixed top-0 left-0 w-60 bg-gray-800 text-white h-screen overflow-y-auto transform ${
           isNavOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 z-10`}
       >
