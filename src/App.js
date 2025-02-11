@@ -14,6 +14,9 @@ import NotFound from "./components/screens/NotFound";
 import AllTestimonials from "./components/screens/AllTestimonials";
 import Blogs from "./components/screens/Blogs";
 import Misc from "./components/screens/Misc";
+import Courses from "./components/screens/Courses";
+import Jobs from "./components/screens/Jobs";
+import Projects from "./components/screens/Projects";
 
 const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
@@ -51,6 +54,15 @@ const App = () => {
           element={<ProtectedRoute element={<DemoRequests />} />}
         />
         <Route path="blogs" element={<ProtectedRoute element={<Blogs />} />} />
+        <Route
+          path="courses"
+          element={<ProtectedRoute element={<Courses />} />}
+        />
+        <Route path="jobs" element={<ProtectedRoute element={<Jobs />} />} />
+        <Route
+          path="projects"
+          element={<ProtectedRoute element={<Projects />} />}
+        />
         <Route
           path="settings"
           element={<ProtectedRoute element={<Settings />} />}

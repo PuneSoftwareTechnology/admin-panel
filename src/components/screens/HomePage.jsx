@@ -20,6 +20,9 @@ import { FaQuestion } from "react-icons/fa";
 import { MdReviews } from "react-icons/md";
 import { ImBlogger } from "react-icons/im";
 import { MdAlignHorizontalLeft } from "react-icons/md";
+import { FaBookReader } from "react-icons/fa";
+import { FaBriefcase } from "react-icons/fa";
+import { GiPoliceBadge } from "react-icons/gi";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -27,6 +30,24 @@ const menuItems = [
     label: "Dashboard",
     path: "dashboard",
     icon: <HiViewGrid />,
+    role: "ADMIN",
+  },
+  {
+    label: "Courses",
+    path: "courses",
+    icon: <FaBookReader />,
+    role: "ADMIN",
+  },
+  {
+    label: "Jobs",
+    path: "jobs",
+    icon: <FaBriefcase />,
+    role: "ADMIN",
+  },
+  {
+    label: "Projects",
+    path: "projects",
+    icon: <GiPoliceBadge />,
     role: "ADMIN",
   },
   {
