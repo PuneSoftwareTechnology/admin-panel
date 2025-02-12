@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
-import { fetchAllCourses } from "../../APIs/courses.services";
+import {
+  fetchAllCourses,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+} from "../../APIs/courses.services";
 import TableView from "../Organims/TableView";
 import AddCourseModal from "../Organims/AddCourseModal";
 import DeleteModal from "../Organims/DeleteModal";
@@ -51,7 +56,7 @@ const Courses = () => {
   };
 
   const handleEditCourse = (course) => {
-    setSelectedCourse(course);
+    setSelectedCourse(courses.find((item) => item.slug === course.slug));
     setIsAddModalOpen(true);
   };
 
@@ -62,21 +67,26 @@ const Courses = () => {
 
   const handleCloseAddModal = () => {
     setIsAddModalOpen(false);
+    setSelectedCourse(null);
+    fetchCoursesAPICall();
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-  };
-
-  const handleSaveCourse = (course) => {
-    // Implement save logic here
-    // If course has an id, update the existing course, otherwise add a new course
-    handleCloseAddModal();
+    setSelectedCourse(null);
   };
 
   const handleConfirmDelete = async () => {
-    // Implement delete logic here
-    handleCloseDeleteModal();
+    setLoading(true);
+    try {
+      await deleteCourse({ id: selectedCourse.id });
+      fetchCoursesAPICall();
+    } catch (error) {
+      // Handle error
+    } finally {
+      setLoading(false);
+      handleCloseDeleteModal();
+    }
   };
 
   return (
@@ -103,7 +113,6 @@ const Courses = () => {
           isOpen={isAddModalOpen}
           onClose={handleCloseAddModal}
           courseData={selectedCourse}
-          onSave={handleSaveCourse}
         />
       )}
       {isDeleteModalOpen && (

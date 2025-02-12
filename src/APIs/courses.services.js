@@ -9,3 +9,33 @@ export const fetchAllCourses = async () => {
     false
   );
 };
+
+export const createCourse = async (payload) => {
+  return await apiRequest(
+    "POST",
+    "/courses/create",
+    payload,
+    "Failed to Add course",
+    true
+  );
+};
+
+export const updateCourse = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/courses/update",
+    payload,
+    "Failed to Add course",
+    true
+  );
+};
+
+export const deleteCourse = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/courses/delete",
+    payload,
+    "Failed to Add course",
+    true
+  );
+};

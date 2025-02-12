@@ -6,7 +6,8 @@ import { IoMdAdd } from "react-icons/io";
 const BulletPointsInput = ({ points, onAddPoint, onRemovePoint }) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleAddPoint = () => {
+  const handleAddPoint = (e) => {
+    e.preventDefault();
     onAddPoint(inputValue);
     setInputValue("");
   };
