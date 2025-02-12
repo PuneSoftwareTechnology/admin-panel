@@ -7,12 +7,14 @@ const useStore = create((set) => ({
   userRole: "",
   email: "",
   name: "",
+  courseNames: [],
   setAuthenticated: (auth) => set({ isAuthenticated: auth }),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setJwtToken: (token) => set({ jwtToken: token }),
   setRole: (role) => set({ userRole: role }),
   setEmail: (email) => set({ email }),
   setName: (name) => set({ name }),
+  setCourses: (courses) => set({ courseNames: courses }),
 }));
 
 // Persist the state to localStorage when it changes

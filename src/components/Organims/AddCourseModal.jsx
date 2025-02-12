@@ -10,6 +10,7 @@ import { createCourse, updateCourse } from "../../APIs/courses.services";
 import Dropdown from "../atoms/DropDown";
 import useStore from "../../utils/zustand";
 import { toast } from "react-toastify";
+import { GiCancel } from "react-icons/gi";
 
 const relatedTopics = [
   { value: "SAP", label: "SAP Training" },
@@ -21,6 +22,11 @@ const relatedTopics = [
 
 const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const user_email = useStore((state) => state.email);
+  const courses = useStore((state) => state.courseNames);
+  const [relatedCourses, setRelatedCourses] = useState(
+    courseData?.related_courses ? JSON.parse(courseData.related_courses) : []
+  );
+  const [availableCourses, setAvailableCourses] = useState(courses);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [intro, setIntro] = useState("");
@@ -43,13 +49,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   } = useBulletPoints(
     courseData?.prerequisite ? JSON.parse(courseData.prerequisite) : []
   );
-  const {
-    points: relatedCourses,
-    addPoint: addRelatedCourse,
-    removePoint: removeRelatedCourse,
-  } = useBulletPoints(
-    courseData?.related_courses ? JSON.parse(courseData.related_courses) : []
-  );
+
   const { UploadButton, uploadStates, clearState } = useFileUpload();
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       module_heading: moduleHeading,
       modules,
       prerequisite: prerequisites,
-      related_courses: relatedCourses,
+      related_courses: relatedCourses.map((course) => course.id),
       slug,
       category,
       training_procedure: trainingProcedure,
@@ -101,6 +101,28 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       setLoading(false);
       onClose();
     }
+  };
+
+  const handleRelatedCoursesChange = (event) => {
+    const selectedCourseId = Number(event?.target?.value); // Convert to number
+
+    const selectedCourse = availableCourses.find(
+      (course) => course.id === selectedCourseId
+    );
+
+    if (selectedCourse) {
+      setRelatedCourses((prev) => [...prev, selectedCourse]); // Add to relatedCourses
+      setAvailableCourses((prev) =>
+        prev.filter((course) => course.id !== selectedCourseId)
+      ); // Remove from availableCourses
+    }
+  };
+
+  const handleRemoveRelatedCourse = (index) => {
+    const courseToRemove = relatedCourses[index];
+
+    setRelatedCourses((prev) => prev.filter((_, i) => i !== index)); // Remove from relatedCourses
+    setAvailableCourses((prev) => [...prev, courseToRemove]); // Add back to availableCourses
   };
 
   const inputFields = [
@@ -194,11 +216,37 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
             <Typography variant="h5" className="block text-gray-700">
               Related Courses
             </Typography>
-            <BulletPointsInput
-              points={relatedCourses}
-              onAddPoint={addRelatedCourse}
-              onRemovePoint={removeRelatedCourse}
+            <Dropdown
+              id="relatedCourses"
+              name="relatedCourses"
+              options={availableCourses.map((course) => ({
+                value: course.id,
+                label: course.name,
+              }))}
+              value={availableCourses.map((course) => ({
+                value: course.id,
+                label: course.name,
+              }))}
+              onChange={handleRelatedCoursesChange}
+              isMulti
             />
+            <ul className="mt-2 flex justify-start items-center gap-2">
+              {relatedCourses.map((course, index) => (
+                <li
+                  key={index}
+                  className="flex w-fit items-center justify-between p-2 bg-gray-200 gap-x-2 rounded-md"
+                >
+                  <span>{course.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveRelatedCourse(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <GiCancel />
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="mb-4">
             <Typography variant="h5" className="block text-gray-700">

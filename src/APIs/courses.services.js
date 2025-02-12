@@ -39,3 +39,13 @@ export const deleteCourse = async (payload) => {
     true
   );
 };
+
+export const getAllCourseName = async () => {
+  return await apiRequest(
+    "GET",
+    "/courses/all-course-names",
+    null,
+    "Failed to fetch",
+    true
+  );
+};

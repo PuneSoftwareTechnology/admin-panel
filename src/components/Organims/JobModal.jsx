@@ -3,11 +3,15 @@ import PrimaryButton from "../atoms/PrimaryButton";
 import SecondaryButton from "../atoms/SecondaryButton";
 import Typography from "../atoms/Typography";
 import Modal from "../Molecule/Modal";
+import useStore from "../../utils/zustand";
+import Dropdown from "../atoms/DropDown";
 
 const JobModal = ({ isOpen, onClose, onSave, loading, job }) => {
+  const courses = useStore((state) => state.courseNames);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [relatedCourse, setRelatedCourse] = useState("");
+  console.log(courses, ">?>?>?>>?>?");
 
   useEffect(() => {
     if (job) {
@@ -65,11 +69,15 @@ const JobModal = ({ isOpen, onClose, onSave, loading, job }) => {
           <Typography variant="h5" className="text-gray-700 mb-2">
             Related Course
           </Typography>
-          <input
-            type="text"
+          <Dropdown
+            id="relatedCourse"
+            name="relatedCourse"
+            options={courses.map((course) => ({
+              value: course.id,
+              label: course.name,
+            }))}
             value={relatedCourse}
             onChange={(e) => setRelatedCourse(e.target.value)}
-            className="w-full border border-gray-300 rounded-md p-2"
           />
         </div>
       </div>

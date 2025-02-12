@@ -1,11 +1,16 @@
 import React from "react";
+import Typography from "./Typography";
 
 const ToggleSwitch = ({ id, checked, onChange, label }) => {
   return (
     <div className="flex items-center">
       {/* Wrap the entire toggle switch in a label */}
       <label htmlFor={id} className="flex items-center cursor-pointer">
-        {label && <span className="mr-3 text-gray-700">{label}</span>}
+        {label && (
+          <Typography variant="h5" className="mr-2">
+            {label}
+          </Typography>
+        )}
         <div className="relative">
           {/* Hidden checkbox for accessibility */}
           <input

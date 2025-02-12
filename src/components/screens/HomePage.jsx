@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { HiMenuAlt3, HiHome, HiOutlineCog, HiViewGrid } from "react-icons/hi";
 import { FaCodePullRequest } from "react-icons/fa6";
 import { FiXSquare } from "react-icons/fi";
@@ -17,6 +17,7 @@ import { FaBookReader } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { GiPoliceBadge } from "react-icons/gi";
 import { FaBookOpen } from "react-icons/fa"; // Add this import
+import { getAllCourseName } from "../../APIs/courses.services";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -97,12 +98,23 @@ const menuItems = [
 const HomePage = () => {
   const userRole = useStore((state) => state.userRole); // Get userRole from Zustand store
   const activeTab = useStore((state) => state.activeTab);
+  const setCourses = useStore((state) => state.setCourses);
   const setActiveTab = useStore((state) => state.setActiveTab);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate(); // React Router hook to navigate
 
   const toggleNav = () => setIsNavOpen(!isNavOpen);
+
+  const fetchAllCourseNames = async () => {
+    const response = await getAllCourseName();
+    if (response?.success && Array.isArray(response?.data)) {
+      setCourses(response?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCourseNames();
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-100">
