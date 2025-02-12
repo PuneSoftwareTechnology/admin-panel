@@ -143,7 +143,7 @@ const Projects = () => {
         </PrimaryButton>
       </div>
       {loading ? (
-        <Loader />
+        <Loader className="mx-auto mt-32 border-gray-900" size="large" />
       ) : (
         <>
           <TableView

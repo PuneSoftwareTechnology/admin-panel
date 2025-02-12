@@ -99,7 +99,7 @@ const Courses = () => {
         </PrimaryButton>
       </div>
       {loading ? (
-        <Loader />
+        <Loader className="mx-auto mt-32 border-gray-900" size="large" />
       ) : (
         <TableView
           data={formattedCourses}
