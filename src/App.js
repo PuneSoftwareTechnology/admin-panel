@@ -23,7 +23,7 @@ const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
 
   const navigateTo = useMemo(() => {
-    if (!isAuthenticated) return "/admin-login";
+    if (!isAuthenticated && !redirectIfAuth) return "/admin-login";
     if (redirectIfAuth && isAuthenticated) return "/home"; // Redirect logged-in users from login page
     if (requiredRole === "SUPER_ADMIN" && userRole === "ADMIN")
       return "/not-authorised"; // Block ADMIN from SUPER_ADMIN routes

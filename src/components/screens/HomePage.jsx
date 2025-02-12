@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import {
-  HiMenuAlt3,
-  HiHome,
-  HiOutlineCog,
-  HiLogout,
-  HiViewGrid,
-} from "react-icons/hi";
+import { HiMenuAlt3, HiHome, HiOutlineCog, HiViewGrid } from "react-icons/hi";
 import { FaCodePullRequest } from "react-icons/fa6";
 import { FiXSquare } from "react-icons/fi";
 import LOGO from "../../assets/Logo.png";
@@ -15,7 +9,6 @@ import useStore from "../../utils/zustand";
 import Header from "../Molecule/Header";
 import Footer from "../Molecule/Footer";
 import { FaUsers } from "react-icons/fa";
-import LogoutModal from "../Organims/LogoutModal";
 import { FaQuestion } from "react-icons/fa";
 import { MdReviews } from "react-icons/md";
 import { ImBlogger } from "react-icons/im";
@@ -99,31 +92,17 @@ const menuItems = [
     icon: <FaBookOpen />,
     role: "ADMIN",
   },
-  {
-    label: "Logout",
-    path: "logout",
-    icon: <HiLogout />,
-    isButton: true,
-    role: "ADMIN",
-  },
 ];
 
 const HomePage = () => {
   const userRole = useStore((state) => state.userRole); // Get userRole from Zustand store
   const activeTab = useStore((state) => state.activeTab);
   const setActiveTab = useStore((state) => state.setActiveTab);
-  const [openModal, setOpenModal] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate(); // React Router hook to navigate
 
   const toggleNav = () => setIsNavOpen(!isNavOpen);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-    setOpenModal(false);
-  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -153,29 +132,19 @@ const HomePage = () => {
 
               return (
                 <li key={item.path}>
-                  {item.isButton ? (
-                    <button
-                      className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-gray-600"
-                      onClick={() => setOpenModal(true)}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </button>
-                  ) : (
-                    <Link
-                      to={item.path}
-                      className={`flex items-center gap-2 px-2 py-2 rounded ${
-                        location.pathname === item.path ||
-                        activeTab === item?.path
-                          ? "bg-gray-600"
-                          : "hover:bg-gray-700"
-                      }`}
-                      onClick={() => setActiveTab(item?.path)}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </Link>
-                  )}
+                  <Link
+                    to={item.path}
+                    className={`flex items-center gap-2 px-2 py-2 rounded ${
+                      location.pathname === item.path ||
+                      activeTab === item?.path
+                        ? "bg-gray-600"
+                        : "hover:bg-gray-700"
+                    }`}
+                    onClick={() => setActiveTab(item?.path)}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </Link>
                 </li>
               );
             })}
@@ -209,14 +178,6 @@ const HomePage = () => {
           </div>
         </main>
       </div>
-
-      <LogoutModal
-        isOpen={openModal}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-        handleLogout={handleLogout}
-      />
     </div>
   );
 };
