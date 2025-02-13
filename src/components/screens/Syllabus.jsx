@@ -34,9 +34,21 @@ const Syllabus = () => {
     id: item?.id || index,
     course_id: item?.course_id || "",
     module_name: item?.module_name || "",
-    lessons: item?.lessons || "",
+    lessons: JSON.parse(item?.lessons).join(",") || "",
     user_email: item?.user_email || "",
   }));
+
+  const columnStyleMap = {
+    Lessons: ({ value }) => (
+      <div>
+        {value.split(",").map((lesson, idx) => (
+          <Typography key={idx} variant="body1">
+            ✅ {lesson}
+          </Typography>
+        ))}
+      </div>
+    ),
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -46,7 +58,11 @@ const Syllabus = () => {
       {loading ? (
         <Loader className="mx-auto mt-32 border-gray-900" size="large" />
       ) : (
-        <TableView data={formattedSyllabus} headers={headers} />
+        <TableView
+          data={formattedSyllabus}
+          headers={headers}
+          columnStyleMap={columnStyleMap}
+        />
       )}
     </div>
   );
