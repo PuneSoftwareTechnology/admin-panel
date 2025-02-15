@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
 import DeleteModal from "../Organims/DeleteModal";
+import EditTestimonial from "../Organims/EditTestimonial";
 import { toast } from "react-toastify";
 import TableView from "../Organims/TableView";
 import {
@@ -17,6 +18,7 @@ const AllTestimonials = () => {
   const [selectedTestimonial, setSelectedTestimonial] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editModal, setEditModal] = useState(false);
 
   const fetchTestmonialsAPICall = async () => {
     setLoading(true);
@@ -44,7 +46,6 @@ const AllTestimonials = () => {
     try {
       const payload = {
         id: selectedTestimonial?.id,
-        user_email: email,
       };
 
       const response = await deleteTestimonial(payload);
@@ -62,15 +63,30 @@ const AllTestimonials = () => {
     }
   };
 
+  const openEditModalHandler = (testimonial) => {
+    setSelectedTestimonial(
+      testimonials?.find((item) => item?.id === testimonial?.id)
+    );
+    setEditModal(true);
+  };
+
   const headers = [
     "ID",
     "Name",
     "Rating",
     "Testimonial",
-    "course",
     "Created at",
     "User email",
   ];
+
+  const formattedData = testimonials?.map((item, index) => ({
+    id: item?.id || index,
+    name: item?.name,
+    star_rating: item?.star_rating,
+    testimonial: item?.testimonial,
+    created_at: item?.created_at,
+    user_email: item?.user_email,
+  }));
 
   if (loading) {
     return <Loader className="mx-auto mt-32 border-gray-900" size="large" />;
@@ -85,8 +101,9 @@ const AllTestimonials = () => {
     <div className="container mx-auto p-4">
       <Typography variant="h3">Testmonials</Typography>
       <TableView
-        data={testimonials}
+        data={formattedData}
         headers={headers}
+        onRowClick={openEditModalHandler}
         onDelete={openDeleteModalHandler}
       />
 
@@ -96,6 +113,17 @@ const AllTestimonials = () => {
           onClose={() => setDeleteModal(false)}
           onDelete={deleteTestimonialAPICALL}
           loading={deleteLoading}
+        />
+      )}
+
+      {editModal && (
+        <EditTestimonial
+          isOpen={editModal}
+          onClose={() => {
+            fetchTestmonialsAPICall();
+            setEditModal(false);
+          }}
+          data={selectedTestimonial}
         />
       )}
     </div>

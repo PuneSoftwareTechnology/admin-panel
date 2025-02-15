@@ -74,7 +74,7 @@ const useFileUpload = () => {
             alignItems: "center",
             justifyContent: "center",
             gap: "8px",
-            backgroundColor: "#3b82f6", // Blue background
+            backgroundColor: "#3b82f6",
             color: "white",
             padding: "8px 16px",
             borderRadius: "4px",
@@ -86,7 +86,7 @@ const useFileUpload = () => {
         >
           {uploadStates[fieldId]?.isUploading ? (
             <>
-              <Loader size="small" /> {/* Use your existing Loader component */}
+              <Loader size="small" />
               <span>Uploading</span>
             </>
           ) : (

@@ -17,7 +17,10 @@ import { FaBookReader } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { GiPoliceBadge } from "react-icons/gi";
 import { FaBookOpen } from "react-icons/fa"; // Add this import
-import { getAllCourseName } from "../../APIs/courses.services";
+import {
+  getAllCategories,
+  getAllCourseName,
+} from "../../APIs/courses.services";
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -96,10 +99,11 @@ const menuItems = [
 ];
 
 const HomePage = () => {
-  const userRole = useStore((state) => state.userRole); // Get userRole from Zustand store
+  const userRole = useStore((state) => state.userRole);
   const activeTab = useStore((state) => state.activeTab);
   const setCourses = useStore((state) => state.setCourses);
   const setActiveTab = useStore((state) => state.setActiveTab);
+  const setCategories = useStore((state) => state.setCategories);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const location = useLocation();
 
@@ -112,8 +116,16 @@ const HomePage = () => {
     }
   };
 
+  const fetchAllCategories = async () => {
+    const response = await getAllCategories();
+    if (response?.success && Array.isArray(response?.data)) {
+      setCategories(response?.data);
+    }
+  };
+
   useEffect(() => {
     fetchAllCourseNames();
+    fetchAllCategories();
   }, []);
 
   return (

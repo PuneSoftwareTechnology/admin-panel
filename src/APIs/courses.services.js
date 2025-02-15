@@ -49,3 +49,13 @@ export const getAllCourseName = async () => {
     true
   );
 };
+
+export const getAllCategories = async () => {
+  return await apiRequest(
+    "GET",
+    "/courses/categories",
+    null,
+    "Failed to fetch",
+    true
+  );
+};

@@ -33,7 +33,7 @@ export const deleteCompany = async (payload) => {
 export const updateCompany = async (payload) => {
   return await apiRequest(
     "PATCH",
-    `/companies/update`,
+    `/companies/edit`,
     payload,
     "Failed to update company",
     true

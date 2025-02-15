@@ -8,8 +8,16 @@ const BulletPointsInput = ({ points, onAddPoint, onRemovePoint }) => {
 
   const handleAddPoint = (e) => {
     e.preventDefault();
-    onAddPoint(inputValue);
-    setInputValue("");
+    if (inputValue.trim() !== "") {
+      onAddPoint(inputValue);
+      setInputValue("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddPoint(e);
+    }
   };
 
   return (
@@ -19,6 +27,7 @@ const BulletPointsInput = ({ points, onAddPoint, onRemovePoint }) => {
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Enter a bullet point"
           className="w-full p-2 border border-gray-300 rounded-md"
         />

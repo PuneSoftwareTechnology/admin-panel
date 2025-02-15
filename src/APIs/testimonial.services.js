@@ -13,6 +13,16 @@ export const fetchAllTestimonials = async () => {
 export const deleteTestimonial = async (payload) => {
   return await apiRequest(
     "PATCH",
+    "/testimonial/delete",
+    payload,
+    "Failed to Delete",
+    true
+  );
+};
+
+export const updateTestimonial = async (payload) => {
+  return await apiRequest(
+    "PATCH",
     "/testimonial/update",
     payload,
     "Failed to Delete",

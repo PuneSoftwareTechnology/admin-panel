@@ -3,6 +3,7 @@ import {
   deleteCompany,
   getCompanies,
   saveCompany,
+  updateCompany,
 } from "../../APIs/misc.services";
 import Typography from "../atoms/Typography";
 import TableView from "../Organims/TableView";
@@ -27,8 +28,8 @@ const Companies = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const user_email = useStore((state) => state.email);
   const [companyData, setCompanyData] = useState({
-    company_name: "",
-    company_logo: "",
+    name: "",
+    logo_url: "",
   });
   const { UploadButton, uploadStates, clearState } = useFileUpload();
 
@@ -53,21 +54,23 @@ const Companies = () => {
   }, []);
 
   const handleSaveCompany = async () => {
-    if (!companyData.company_name.trim()) return;
+    if (!companyData.name.trim()) return;
 
     setLoading(true);
     try {
       let payload = {
         ...companyData,
         user_email,
-        company_logo:
-          uploadStates.logo?.uploadedUrl || selectedCompany?.company_logo,
+        logo_url: uploadStates.logo?.uploadedUrl || selectedCompany?.logo_url,
       };
 
       if (isEditMode) {
         payload.id = selectedCompany?.id;
       }
-      const response = await saveCompany(payload);
+
+      const response = isEditMode
+        ? await updateCompany(payload)
+        : await saveCompany(payload);
       if (response?.success) {
         setLoading(false);
         setModalOpen(false);
@@ -85,30 +88,28 @@ const Companies = () => {
   const handleEditCompany = (company) => {
     setSelectedCompany(company);
     setCompanyData({
-      company_name: company.company_name,
-      company_logo: company.company_logo,
+      name: company.name,
+      logo_url: company.logo_url,
     });
     setIsEditMode(true);
     setModalOpen(true);
   };
 
   const resetForm = () => {
-    setCompanyData({ company_name: "", company_logo: "" });
+    setCompanyData({ name: "", logo_url: "" });
     setSelectedCompany(null);
     setIsEditMode(false);
   };
 
   const isDisabled =
-    isEditMode &&
-    selectedCompany &&
-    companyData.company_name === selectedCompany.company_name;
+    isEditMode && selectedCompany && companyData.name === selectedCompany.name;
 
   const headers = ["ID", "Name", "Logo", "User email", "Created At"];
 
   const fomattedData = companies.map((company, index) => ({
     id: company.id || index,
-    company_name: company.company_name || "",
-    company_logo: company.company_logo || "",
+    name: company.name || "",
+    logo_url: company.logo_url || "",
     user_email: company.user_email || "",
     created_at: company.created_at || "",
   }));
@@ -167,8 +168,7 @@ const Companies = () => {
           data={fomattedData}
           headers={headers}
           onRowClick={(row) => {
-            setModalOpen(true);
-            setSelectedCompany(row);
+            handleEditCompany(row);
           }}
           onDelete={(row) => {
             setSelectedCompany(row);
@@ -188,17 +188,13 @@ const Companies = () => {
       >
         <div className="space-y-4">
           <InputBox
-            id="company_name"
-            name="company_name"
+            id="name"
+            name="name"
             label="Company Name"
             placeholder="Enter company name"
-            value={
-              selectedCompany
-                ? selectedCompany?.company_name
-                : companyData.company_name
-            }
+            value={companyData.name} // Always use companyData.name
             onChange={(e) =>
-              setCompanyData({ ...companyData, company_name: e.target.value })
+              setCompanyData({ ...companyData, name: e.target.value })
             }
           />
 
@@ -207,9 +203,9 @@ const Companies = () => {
               Company Logo
             </Typography>
             <UploadButton fieldId="logo" showImage={true} />
-            {selectedCompany && selectedCompany.company_logo && (
+            {selectedCompany && selectedCompany.logo_url && (
               <img
-                src={selectedCompany.company_logo}
+                src={selectedCompany.logo_url}
                 alt="Company Logo"
                 className="w-40 h-40 mt-2"
               />
