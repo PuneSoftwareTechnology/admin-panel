@@ -26,7 +26,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const [description, setDescription] = useState("");
   const [moduleHeading, setModuleHeading] = useState("");
   const [slug, setSlug] = useState("");
-  const [category, setCategory] = useState("SAP");
+  const [category, setCategory] = useState();
   const [trainingProcedure, setTrainingProcedure] = useState(false);
   const {
     points: modules,
@@ -62,9 +62,9 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       module_heading: moduleHeading,
       modules,
       prerequisite: prerequisites,
-      related_courses: relatedCourses.map((course) => course.id),
+      related_courses: relatedCourses?.map((course) => course.id) || [],
       slug,
-      category,
+      category_id: category,
       training_procedure: trainingProcedure,
       featured_image:
         uploadStates.courseImage?.uploadedUrl || courseData?.featured_image,
@@ -223,7 +223,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
               isMulti
             />
             <ul className="mt-2 flex justify-start items-center gap-2">
-              {relatedCourses.map((data, index) => (
+              {relatedCourses?.map((data, index) => (
                 <li
                   key={index}
                   className="flex w-fit items-center justify-between p-2 bg-gray-200 gap-x-2 rounded-md"
