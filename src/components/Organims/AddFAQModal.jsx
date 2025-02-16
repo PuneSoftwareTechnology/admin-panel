@@ -8,45 +8,50 @@ import { toast } from "react-toastify";
 import Modal from "../Molecule/Modal";
 import useStore from "../../utils/zustand";
 
-const relatedTopics = [
-  { value: "SAP", label: "SAP Training" },
-  { value: "CLOUD_TECHNOLOGIES", label: "Cloud Technologies" },
-  { value: "DATA_ANALYTICS", label: "Data Analytics Certification" },
-  { value: "AI&ML", label: "AI and Machine Learning" },
-  { value: "CYBER_SECURITY", label: "Cyber Security" },
-];
-
 const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
   const email = useStore((state) => state.email);
+  const courses = useStore((state) => state.courseNames);
+  const categories = useStore((state) => state.categories);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [relatedTopic, setRelatedTopic] = useState("SAP");
+  const [courseId, setCourseId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isDirty, setIsDirty] = useState(false); // To track changes
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Set initial values if faqData is provided (for edit mode)
+  const courseOptions = courses.map((course) => ({
+    value: course?.id,
+    label: course?.name,
+  }));
+
+  const categoryOptions = categories.map((category) => ({
+    value: category?.id,
+    label: category?.name,
+  }));
+
   useEffect(() => {
     if (faqData) {
       setQuestion(faqData.question || "");
       setAnswer(faqData.answer || "");
-      setRelatedTopic(faqData.related_topic || "SAP");
+      setCourseId(faqData.course_id || "");
+      setCategoryId(faqData.category_id || "");
     }
   }, [faqData]);
 
   useEffect(() => {
-    // Check if any field has changed to enable/disable the submit button
     if (
       faqData &&
       (question !== faqData.question ||
         answer !== faqData.answer ||
-        relatedTopic !== faqData.related_topic)
+        courseId !== faqData.course_id ||
+        categoryId !== faqData.category_id)
     ) {
       setIsDirty(true);
     } else {
       setIsDirty(false);
     }
-  }, [question, answer, relatedTopic, faqData]);
+  }, [question, answer, courseId, categoryId, faqData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +59,8 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
     setError(""); // Clear any previous errors
 
     // Basic validation
-    if (!question || !answer) {
-      setError("Question and Answer are required");
+    if (!question || !answer || !courseId || !categoryId) {
+      setError("All fields are required");
       setLoading(false);
       return;
     }
@@ -63,7 +68,8 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
     const faqPayload = {
       question,
       answer,
-      related_topic: relatedTopic,
+      course_id: courseId,
+      category_id: categoryId,
       user_email: email,
       id: faqData?.id,
     };
@@ -128,11 +134,19 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
         </div>
 
         <Dropdown
-          id="relatedTopic"
-          name="relatedTopic"
-          options={relatedTopics}
-          value={relatedTopic}
-          onChange={(e) => setRelatedTopic(e.target.value)}
+          id="course"
+          name="course_id"
+          options={courseOptions}
+          value={courseId} // Set to current state
+          onChange={(e) => setCourseId(e.target.value)}
+        />
+
+        <Dropdown
+          id="category"
+          name="category_id"
+          options={categoryOptions}
+          value={categoryId} // Set to current state
+          onChange={(e) => setCategoryId(e.target.value)}
         />
 
         <PrimaryButton

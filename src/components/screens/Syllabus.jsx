@@ -3,8 +3,10 @@ import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
 import { fetchAllSyllabus } from "../../APIs/syllabus.services";
 import TableView from "../Organims/TableView";
+import useStore from "../../utils/zustand";
 
 const Syllabus = () => {
+  const courses = useStore((state) => state.courseNames);
   const [loading, setLoading] = useState(false);
   const [syllabus, setSyllabus] = useState([]);
 
@@ -32,16 +34,17 @@ const Syllabus = () => {
 
   const formattedSyllabus = syllabus.map((item, index) => ({
     id: item?.id || index,
-    course_id: item?.course_id || "",
+    course_id:
+      courses.find((course) => course?.id === item?.course_id)?.name || "",
     module_name: item?.module_name || "",
-    lessons: JSON.parse(item?.lessons).join(",") || "",
+    lessons: item?.lessons || [],
     user_email: item?.user_email || "",
   }));
 
   const columnStyleMap = {
     Lessons: ({ value }) => (
       <div>
-        {value.split(",").map((lesson, idx) => (
+        {value.map((lesson, idx) => (
           <Typography key={idx} variant="body1">
             ✅ {lesson}
           </Typography>

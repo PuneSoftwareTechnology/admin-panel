@@ -12,19 +12,12 @@ import useStore from "../../utils/zustand";
 import { toast } from "react-toastify";
 import { GiCancel } from "react-icons/gi";
 
-const relatedTopics = [
-  { value: "SAP", label: "SAP Training" },
-  { value: "CLOUD_TECHNOLOGIES", label: "Cloud Technologies" },
-  { value: "DATA_ANALYTICS", label: "Data Analytics Certification" },
-  { value: "AI&ML", label: "AI and Machine Learning" },
-  { value: "CYBER_SECURITY", label: "Cyber Security" },
-];
-
 const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const user_email = useStore((state) => state.email);
   const courses = useStore((state) => state.courseNames);
+  const categories = useStore((state) => state?.categories);
   const [relatedCourses, setRelatedCourses] = useState(
-    courseData?.related_courses ? JSON.parse(courseData.related_courses) : []
+    courseData?.related_courses
   );
   const [availableCourses, setAvailableCourses] = useState(courses);
   const [loading, setLoading] = useState(false);
@@ -39,16 +32,12 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
     points: modules,
     addPoint: addModule,
     removePoint: removeModule,
-  } = useBulletPoints(
-    courseData?.modules ? JSON.parse(courseData.modules) : []
-  );
+  } = useBulletPoints(courseData?.modules);
   const {
     points: prerequisites,
     addPoint: addPrerequisite,
     removePoint: removePrerequisite,
-  } = useBulletPoints(
-    courseData?.prerequisite ? JSON.parse(courseData.prerequisite) : []
-  );
+  } = useBulletPoints(courseData?.prerequisite);
 
   const { UploadButton, uploadStates, clearState } = useFileUpload();
 
@@ -177,10 +166,13 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
               Category
             </Typography>
             <Dropdown
-              id="category"
-              name="category"
-              options={relatedTopics}
-              value={category}
+              id="relatedCourse"
+              name="relatedCourse"
+              options={categories.map((category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+              value={courseData?.category_id}
               onChange={(e) => setCategory(e.target.value)}
             />
           </div>
@@ -231,12 +223,14 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
               isMulti
             />
             <ul className="mt-2 flex justify-start items-center gap-2">
-              {relatedCourses.map((course, index) => (
+              {relatedCourses.map((data, index) => (
                 <li
                   key={index}
                   className="flex w-fit items-center justify-between p-2 bg-gray-200 gap-x-2 rounded-md"
                 >
-                  <span>{course.name}</span>
+                  <span>
+                    {courses.find((course) => course?.id === data)?.name || ""}
+                  </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveRelatedCourse(index)}

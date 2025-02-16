@@ -12,8 +12,10 @@ import AddCourseModal from "../Organims/AddCourseModal";
 import DeleteModal from "../Organims/DeleteModal";
 import PrimaryButton from "../atoms/PrimaryButton";
 import { MdAdd } from "react-icons/md";
+import useStore from "../../utils/zustand";
 
 const Courses = () => {
+  const categories = useStore((state) => state.categories);
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -46,7 +48,9 @@ const Courses = () => {
     id: item?.id || index,
     name: item?.name || "",
     slug: item?.slug || "",
-    category: item?.category || "",
+    category_id:
+      categories.find((category) => category?.id === item?.category_id)?.name ||
+      "",
     user_email: item?.user_email || "",
   }));
 

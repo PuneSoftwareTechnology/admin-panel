@@ -17,6 +17,7 @@ import { MdAdd } from "react-icons/md";
 
 const Jobs = () => {
   const email = useStore((state) => state.email);
+  const courses = useStore((state) => state.courseNames);
   const [loading, setLoading] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -116,7 +117,8 @@ const Jobs = () => {
     name: item?.name || "",
     description: item?.description || "",
     created_at: item?.created_at || "",
-    related_course: item?.related_course || "",
+    related_course:
+      courses.find((course) => course?.id === item?.related_course)?.name || "",
     user_email: item?.user_email || "",
   }));
 

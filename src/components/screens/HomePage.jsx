@@ -16,7 +16,7 @@ import { MdAlignHorizontalLeft } from "react-icons/md";
 import { FaBookReader } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { GiPoliceBadge } from "react-icons/gi";
-import { FaBookOpen } from "react-icons/fa"; // Add this import
+import { FaBookOpen } from "react-icons/fa";
 import {
   getAllCategories,
   getAllCourseName,
@@ -185,7 +185,7 @@ const HomePage = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto">
         <header className="flex items-center justify-between p-4 bg-gray-800 text-white md:hidden">
           <HiMenuAlt3 size={24} onClick={toggleNav} />
           <Typography variant="h6" color="text-white">

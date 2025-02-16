@@ -11,7 +11,6 @@ const JobModal = ({ isOpen, onClose, onSave, loading, job }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [relatedCourse, setRelatedCourse] = useState("");
-  console.log(courses, ">?>?>?>>?>?");
 
   useEffect(() => {
     if (job) {

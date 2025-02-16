@@ -8,8 +8,10 @@ import Typography from "../atoms/Typography";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
 import TableView from "../Organims/TableView";
+import useStore from "../../utils/zustand";
 
 const AllFAQs = () => {
+  const courses = useStore((state) => state.courseNames);
   const [loading, setLoading] = useState(false);
   const [faqs, setFaqs] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -66,7 +68,8 @@ const AllFAQs = () => {
       id: request?.id || index,
       question: request.question || "",
       answer: request.answer || "",
-      related_topic: request.related_topic || "",
+      course_id:
+        courses.find((course) => course?.id === request?.course_id)?.name || "",
       created_at: request?.created_at,
     })) || [];
 
@@ -85,7 +88,7 @@ const AllFAQs = () => {
         data={formattedData}
         headers={["ID", "Question", "Answer", "Related Topic", "Created at"]}
         onRowClick={(faq) => {
-          setSelectedFaq(faq);
+          setSelectedFaq(faqs.find((item) => item?.id === faq?.id));
           setOpenAddModal(true);
         }}
         onDelete={(faq) => {

@@ -17,6 +17,7 @@ import { MdAdd } from "react-icons/md";
 
 const Projects = () => {
   const email = useStore((state) => state.email);
+  const courses = useStore((state) => state.courseNames);
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -128,7 +129,8 @@ const Projects = () => {
     name: item?.name || "",
     description: item?.description || "",
     created_at: item?.created_at || "",
-    related_course: item?.related_course || "",
+    related_course:
+      courses.find((course) => course?.id === item?.related_course)?.name || "",
     user_email: item?.user_email || "",
   }));
 

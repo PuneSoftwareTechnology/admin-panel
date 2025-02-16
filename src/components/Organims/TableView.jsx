@@ -28,7 +28,7 @@ const TableView = ({
           {data.length > 0 ? (
             data.map((row, index) => (
               <tr
-                key={row.id}
+                key={row.id || index}
                 className={
                   index % 2 === 0
                     ? "bg-white hover:bg-gray-100 cursor-pointer"

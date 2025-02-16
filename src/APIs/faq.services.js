@@ -25,8 +25,6 @@ export const deleteFAQ = async (payload) => {
 };
 
 export const updateFAQ = async (payload) => {
-  console.log(payload, ">?>?>>?>>?>");
-
   return await apiRequest(
     "PATCH",
     "/faq/update",
