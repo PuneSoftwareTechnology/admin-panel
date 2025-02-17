@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Modal from "../Molecule/Modal";
 import Typography from "../atoms/Typography";
 import InputBox from "../atoms/InputBox";
@@ -45,7 +44,6 @@ const roleOptions = [
 ];
 
 const CreateUserModal = ({ isOpen, onClose, user = null }) => {
-  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     username: "",
     name: "",

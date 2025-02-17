@@ -11,15 +11,7 @@ import useFileUpload from "../../hooks/useUploadFile";
 import BulletPointsInput from "../Molecule/BulletPointsInput";
 import useBulletPoints from "../../hooks/useBulletPoints";
 
-// Category and Status options
-const categoryOptions = [
-  { label: "SAP Training", value: "SAP" },
-  { label: "Cloud Technologies", value: "CLOUD" },
-  { label: "Data Analytics", value: "DATA_ANALYTICS" },
-  { label: "Machine Learning & AI", value: "AI&ML" },
-  { label: "Cyber Security", value: "CYBER_SECURITY" },
-];
-
+// Status options
 const statusOptions = [
   { label: "Draft", value: "DRAFT" },
   { label: "Published", value: "PUBLISHED" },
@@ -76,15 +68,16 @@ const inputFields = [
   },
   { id: "conclusion", label: "Conclusion", type: "textarea" },
   {
-    id: "category",
+    id: "category_id",
     label: "Category",
     type: "select",
-    options: categoryOptions,
+    options: [], // Initialize with an empty array
   },
   { id: "status", label: "Status", type: "select", options: statusOptions },
 ];
 
 const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
+  const categories = useStore((state) => state.categories);
   const { UploadButton, uploadStates, clearState } = useFileUpload();
   const { points, addPoint, removePoint } = useBulletPoints([]);
 
@@ -105,11 +98,21 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     tertiary_content_title: "",
     tertiary_content_points: [],
     conclusion: "",
-    category: "SAP",
+    category_id: "",
     status: "Draft",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      inputFields.find((field) => field.id === "category_id").options =
+        categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }));
+    }
+  }, [categories]);
 
   useEffect(() => {
     if (blogId) {
@@ -170,7 +173,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
-    console.log(blogPayload, "blogPayload");
+    // delete blogPayload["category"];
 
     try {
       const response = blogId

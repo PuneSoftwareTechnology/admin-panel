@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  deleteDemo,
-  getDemoRequests,
-  updateDemo,
-} from "../../APIs/demos.services";
+import { deleteDemo, getDemoRequests } from "../../APIs/demos.services";
 import Loader from "../atoms/Loader";
 import ErrorPage from "./ErrorPage";
 import Typography from "../atoms/Typography";

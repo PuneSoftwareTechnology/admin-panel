@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Typography from "../atoms/Typography";
-import Loader from "../atoms/Loader";
 import Companies from "../Organims/Companies";
 
 const Misc = () => {
@@ -9,7 +8,6 @@ const Misc = () => {
   return (
     <div className="p-4">
       <Typography variant="h2">Miscellaneous Data</Typography>
-
       <Companies />
     </div>
   );

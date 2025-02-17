@@ -9,10 +9,8 @@ import {
   deleteTestimonial,
   fetchAllTestimonials,
 } from "../../APIs/testimonial.services";
-import useStore from "../../utils/zustand";
 
 const AllTestimonials = () => {
-  const email = useStore((state) => state.email);
   const [loading, setLoading] = useState(false);
   const [testimonials, setTestimonials] = useState([]);
   const [selectedTestimonial, setSelectedTestimonial] = useState(null);

@@ -30,7 +30,7 @@ const ProjectModal = ({ isOpen, onClose, onSave, loading, project }) => {
       setDescription("");
       setRelatedCourse("");
     }
-  }, [isOpen]);
+  }, [isOpen, project]);
 
   const handleSave = async () => {
     console.log("Form data being sent:", {

@@ -39,7 +39,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
     removePoint: removePrerequisite,
   } = useBulletPoints(courseData?.prerequisite);
 
-  const { UploadButton, uploadStates, clearState } = useFileUpload();
+  const { UploadButton, uploadStates } = useFileUpload();
 
   useEffect(() => {
     if (courseData) {

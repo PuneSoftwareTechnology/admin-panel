@@ -30,7 +30,7 @@ const JobModal = ({ isOpen, onClose, onSave, loading, job }) => {
       setDescription("");
       setRelatedCourse("");
     }
-  }, [isOpen]);
+  }, [isOpen, job]);
 
   const handleSave = async () => {
     await onSave({ name, description, related_course: relatedCourse });

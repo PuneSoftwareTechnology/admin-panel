@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../atoms/Loader";
 import Typography from "../atoms/Typography";
-import {
-  fetchAllCourses,
-  createCourse,
-  updateCourse,
-  deleteCourse,
-} from "../../APIs/courses.services";
+import { fetchAllCourses, deleteCourse } from "../../APIs/courses.services";
 import TableView from "../Organims/TableView";
 import AddCourseModal from "../Organims/AddCourseModal";
 import DeleteModal from "../Organims/DeleteModal";

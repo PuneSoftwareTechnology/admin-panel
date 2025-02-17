@@ -3,7 +3,6 @@ import Modal from "./Modal";
 import InputBox from "../atoms/InputBox";
 import Dropdown from "../atoms/DropDown";
 import PrimaryButton from "../atoms/PrimaryButton";
-import useBulletPoints from "../../hooks/useBulletPoints";
 import { createSyllabus, updateSyllabus } from "../../APIs/syllabus.services";
 import useStore from "../../utils/zustand";
 import SecondaryButton from "../atoms/SecondaryButton";

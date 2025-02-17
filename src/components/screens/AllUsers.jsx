@@ -6,7 +6,6 @@ import TableView from "../Organims/TableView";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
 import PrimaryButton from "../atoms/PrimaryButton";
-import { useNavigate } from "react-router-dom";
 import { MdAdd } from "react-icons/md";
 import CreateUserModal from "../Organims/CreateUserModal";
 
@@ -17,7 +16,6 @@ const UsersTable = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const navigate = useNavigate();
 
   const fetchAllUsers = async () => {
     setLoading(true);
