@@ -16,9 +16,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const user_email = useStore((state) => state.email);
   const courses = useStore((state) => state.courseNames);
   const categories = useStore((state) => state?.categories);
-  const [relatedCourses, setRelatedCourses] = useState(
-    courseData?.related_courses
-  );
+  const [relatedCourses, setRelatedCourses] = useState([]);
   const [availableCourses, setAvailableCourses] = useState(courses);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -48,10 +46,18 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       setDescription(courseData.description || "");
       setModuleHeading(courseData.module_heading || "");
       setSlug(courseData.slug || "");
-      setCategory(courseData.category || "");
+      setCategory(courseData.category_id || "");
       setTrainingProcedure(courseData.training_procedure || false);
+      setRelatedCourses(courseData?.related_courses || []);
+      setAvailableCourses(
+        courses.filter(
+          (course) => !courseData.related_courses.includes(course.id)
+        )
+      );
+    } else {
+      setAvailableCourses(courses);
     }
-  }, [courseData]);
+  }, [courseData, courses]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -93,25 +99,28 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   };
 
   const handleRelatedCoursesChange = (event) => {
-    const selectedCourseId = Number(event?.target?.value); // Convert to number
+    const selectedCourseId = event.target.value;
 
     const selectedCourse = availableCourses.find(
       (course) => course.id === selectedCourseId
     );
 
     if (selectedCourse) {
-      setRelatedCourses((prev) => [...prev, selectedCourse]); // Add to relatedCourses
+      setRelatedCourses([...relatedCourses, selectedCourse.id]);
       setAvailableCourses((prev) =>
         prev.filter((course) => course.id !== selectedCourseId)
-      ); // Remove from availableCourses
+      );
     }
   };
 
   const handleRemoveRelatedCourse = (index) => {
-    const courseToRemove = relatedCourses[index];
+    const courseToRemoveId = relatedCourses[index];
 
     setRelatedCourses((prev) => prev.filter((_, i) => i !== index)); // Remove from relatedCourses
-    setAvailableCourses((prev) => [...prev, courseToRemove]); // Add back to availableCourses
+    setAvailableCourses((prev) => [
+      ...prev,
+      courses.find((course) => course.id === courseToRemoveId),
+    ]); // Add back to availableCourses
   };
 
   const inputFields = [
@@ -166,13 +175,13 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
               Category
             </Typography>
             <Dropdown
-              id="relatedCourse"
-              name="relatedCourse"
+              id="category"
+              name="category"
               options={categories.map((category) => ({
                 value: category.id,
                 label: category.name,
               }))}
-              value={courseData?.category_id}
+              value={category}
               onChange={(e) => setCategory(e.target.value)}
             />
           </div>
@@ -215,21 +224,19 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
                 value: course.id,
                 label: course.name,
               }))}
-              value={availableCourses.map((course) => ({
-                value: course.id,
-                label: course.name,
-              }))}
+              value=""
               onChange={handleRelatedCoursesChange}
               isMulti
             />
             <ul className="mt-2 flex justify-start items-center gap-2">
-              {relatedCourses?.map((data, index) => (
+              {relatedCourses?.map((courseId, index) => (
                 <li
                   key={index}
                   className="flex w-fit items-center justify-between p-2 bg-gray-200 gap-x-2 rounded-md"
                 >
                   <span>
-                    {courses.find((course) => course?.id === data)?.name || ""}
+                    {courses.find((course) => course?.id === courseId)?.name ||
+                      ""}
                   </span>
                   <button
                     type="button"
