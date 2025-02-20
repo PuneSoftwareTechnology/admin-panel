@@ -8,6 +8,7 @@ const TableView = ({
   onCellClick,
   onDelete,
   columnStyleMap = {},
+  showId = false, // Add showId prop with default value false
 }) => {
   return (
     <div className="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -15,7 +16,9 @@ const TableView = ({
         <thead className="bg-gray-600">
           <tr>
             {headers
-              .filter((header) => header !== "deleted")
+              .filter(
+                (header) => header !== "deleted" && (showId || header !== "ID")
+              ) // Filter out ID if showId is false
               .map((header, index) => (
                 <th key={index} className="px-4 text-white py-2 border">
                   {header}
@@ -37,7 +40,9 @@ const TableView = ({
                 onClick={() => onRowClick(row)}
               >
                 {Object.keys(row)
-                  .filter((key) => key !== "deleted")
+                  .filter(
+                    (key) => key !== "deleted" && (showId || key !== "id")
+                  ) // Filter out id if showId is false
                   .map((key, cellIndex) => {
                     const columnName = headers[cellIndex];
                     const ColumnComponent = columnStyleMap[columnName];

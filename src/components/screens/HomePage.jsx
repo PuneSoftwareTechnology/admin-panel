@@ -55,7 +55,7 @@ const menuItems = [
     role: "ADMIN",
   },
   {
-    label: "Requests",
+    label: "Enquiry",
     path: "requests",
     icon: <FaCodePullRequest />,
     role: "ADMIN",

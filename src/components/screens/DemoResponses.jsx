@@ -7,8 +7,10 @@ import UpdateDemoRequestModal from "../Organims/UpdateDemoRequestModal";
 import TableView from "../Organims/TableView";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
+import useStore from "../../utils/zustand";
 
 const DemoRequests = () => {
+  const courses = useStore((state) => state.courseNames);
   const [demoRequests, setDemoRequests] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,19 +50,20 @@ const DemoRequests = () => {
     "Message",
     "Comment",
     "Next Step",
-    "Created At",
+    "Course",
   ];
 
   const formattedData =
     demoRequests?.map((request, index) => ({
-      index: request?.id || index,
+      id: request?.id || index,
       name: request.name || "",
       email: request.email || "",
       phone: request.phone || "",
       message: request.message || "",
       comment: request?.comment || "",
       next_step: request?.next_step || "",
-      created_at: request?.created_at,
+      course:
+        courses?.find((item) => item?.id === request?.course_id)?.name || "",
     })) || [];
 
   const deleteDemoAPICALL = async () => {

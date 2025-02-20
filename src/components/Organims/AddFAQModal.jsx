@@ -106,6 +106,7 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
       title={faqData ? "Edit FAQ" : "Add FAQ"}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+        <Typography variant="h5">Question</Typography>
         <InputBox
           id="question"
           name="question"
@@ -117,6 +118,8 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
           error={error && !question ? "Question is required" : ""}
         />
         <div>
+          <Typography variant="h5">Answer</Typography>
+
           <textarea
             id="answer"
             name="answer"
@@ -132,21 +135,22 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
             </Typography>
           )}
         </div>
-
-        <Dropdown
-          id="course"
-          name="course_id"
-          options={courseOptions}
-          value={courseId} // Set to current state
-          onChange={(e) => setCourseId(e.target.value)}
-        />
-
+        <Typography variant="h5">Course Category</Typography>
         <Dropdown
           id="category"
           name="category_id"
           options={categoryOptions}
           value={categoryId} // Set to current state
           onChange={(e) => setCategoryId(e.target.value)}
+        />
+
+        <Typography variant="h5">Course</Typography>
+        <Dropdown
+          id="course"
+          name="course_id"
+          options={courseOptions}
+          value={courseId} // Set to current state
+          onChange={(e) => setCourseId(e.target.value)}
         />
 
         <PrimaryButton
