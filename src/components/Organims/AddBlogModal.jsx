@@ -99,7 +99,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     tertiary_content_points: [],
     conclusion: "",
     category_id: "",
-    status: "Draft",
+    status: "DRAFT",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -173,7 +173,8 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
-    // delete blogPayload["category"];
+
+    console.log(blogPayload, "?>?>?>>?>");
 
     try {
       const response = blogId
@@ -230,13 +231,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
               />
             ) : field.type === "file" ? (
               <>
-                {/* {uploadStates[field.id]?.uploadedUrl && (
-                  <img
-                    src={uploadStates[field.id].uploadedUrl}
-                    alt={field.label}
-                    className="w-50 h-50 rounded-md object-cover mx-auto"
-                  />
-                )} */}
                 <UploadButton
                   fieldId={field.id}
                   showImage={false}
