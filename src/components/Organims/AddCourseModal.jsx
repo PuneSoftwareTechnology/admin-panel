@@ -68,7 +68,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       module_heading: moduleHeading,
       modules,
       prerequisite: prerequisites,
-      related_courses: relatedCourses?.map((course) => course.id) || [],
+      related_courses: relatedCourses,
       slug,
       category_id: category,
       training_procedure: trainingProcedure,
@@ -145,6 +145,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      width="w-1/2"
       title={courseData ? "Edit Course" : "Add New Course"}
     >
       <div className="p-4">
@@ -253,16 +254,10 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
             <Typography variant="h5" className="block text-gray-700">
               Featured Image
             </Typography>
-            <UploadButton fieldId="courseImage" />
-            {courseData?.featured_image && (
-              <div className="mt-2">
-                <img
-                  src={courseData?.featured_image}
-                  alt="Uploaded"
-                  className="w-full h-auto rounded-md object-cover"
-                />
-              </div>
-            )}
+            <UploadButton
+              existingImageUrl={courseData?.featured_image}
+              fieldId="courseImage"
+            />
           </div>
           <div className="flex justify-end">
             <PrimaryButton

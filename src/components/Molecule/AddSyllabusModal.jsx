@@ -80,7 +80,7 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
       isOpen={isOpen}
       onClose={onClose}
       title={syllabus ? "Edit Syllabus course" : "Add Syllabus Course"}
-      width="w-2/3"
+      width="w-1/2"
     >
       <div className="space-y-4">
         <Typography variant="h5">Course</Typography>

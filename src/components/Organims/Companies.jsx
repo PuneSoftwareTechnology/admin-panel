@@ -202,14 +202,11 @@ const Companies = () => {
             <Typography variant="h3" className="mb-2">
               Company Logo
             </Typography>
-            <UploadButton fieldId="logo" showImage={true} />
-            {selectedCompany && selectedCompany.logo_url && (
-              <img
-                src={selectedCompany.logo_url}
-                alt="Company Logo"
-                className="w-40 h-40 mt-2"
-              />
-            )}
+            <UploadButton
+              existingImageUrl={selectedCompany?.logo_url}
+              fieldId="logo"
+              showImage={true}
+            />
           </div>
           <div className="flex justify-end">
             <PrimaryButton

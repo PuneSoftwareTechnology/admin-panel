@@ -9,12 +9,15 @@ const API_KEY = "0cc73818100d94431369ba1bc02193f5";
 const useFileUpload = () => {
   const [uploadStates, setUploadStates] = useState({});
 
-  const uploadFile = async (file, fieldId) => {
+  const uploadFile = async (file, fieldId, isMulti) => {
     if (!file) return;
 
     setUploadStates((prev) => ({
       ...prev,
-      [fieldId]: { isUploading: true, uploadedUrl: null },
+      [fieldId]: {
+        isUploading: true,
+        uploadedUrl: isMulti ? [...(prev[fieldId]?.uploadedUrl || [])] : null,
+      },
     }));
 
     const formData = new FormData();
@@ -36,7 +39,9 @@ const useFileUpload = () => {
           ...prev,
           [fieldId]: {
             isUploading: false,
-            uploadedUrl: response.data.data.url,
+            uploadedUrl: isMulti
+              ? [...(prev[fieldId]?.uploadedUrl || []), response.data.data.url]
+              : response.data.data.url,
           },
         }));
       } else {
@@ -53,14 +58,38 @@ const useFileUpload = () => {
     }
   };
 
-  const UploadButton = ({ fieldId, showImage = true, onChange }) => {
+  const removeFile = (fieldId, index = null) => {
+    setUploadStates((prev) => {
+      if (index !== null && Array.isArray(prev[fieldId]?.uploadedUrl)) {
+        const updatedUrls = prev[fieldId].uploadedUrl.filter(
+          (_, i) => i !== index
+        );
+        return {
+          ...prev,
+          [fieldId]: { isUploading: false, uploadedUrl: updatedUrls },
+        };
+      }
+      return {
+        ...prev,
+        [fieldId]: { isUploading: false, uploadedUrl: null },
+      };
+    });
+  };
+
+  const UploadButton = ({
+    fieldId,
+    showImage = true,
+    onChange,
+    existingImageUrl = null,
+    isMulti = false,
+  }) => {
     return (
       <div className="upload-button-wrapper">
         <input
           type="file"
           onChange={(e) => {
             const file = e.target.files[0];
-            uploadFile(file, fieldId);
+            uploadFile(file, fieldId, isMulti);
             if (onChange) onChange(e);
           }}
           style={{ display: "none" }}
@@ -96,13 +125,36 @@ const useFileUpload = () => {
             </>
           )}
         </label>
-        {showImage && uploadStates[fieldId]?.uploadedUrl && (
+        {showImage && (
           <div className="mt-4">
-            <img
-              src={uploadStates[fieldId].uploadedUrl}
-              alt="Uploaded"
-              className="w-50 h-50 rounded-md object-cover mx-auto"
-            />
+            {existingImageUrl && !uploadStates[fieldId]?.uploadedUrl && (
+              <div className="relative">
+                <img
+                  src={existingImageUrl}
+                  alt="Existing"
+                  className="w-50 h-50 rounded-md object-cover mx-auto"
+                />
+              </div>
+            )}
+            {Array.isArray(uploadStates[fieldId]?.uploadedUrl)
+              ? uploadStates[fieldId].uploadedUrl.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt="Uploaded"
+                      className="w-50 h-50 rounded-md object-cover mx-auto"
+                    />
+                  </div>
+                ))
+              : uploadStates[fieldId]?.uploadedUrl && (
+                  <div className="relative">
+                    <img
+                      src={uploadStates[fieldId].uploadedUrl}
+                      alt="Uploaded"
+                      className="w-50 h-50 rounded-md object-cover mx-auto"
+                    />
+                  </div>
+                )}
           </div>
         )}
       </div>
@@ -116,7 +168,7 @@ const useFileUpload = () => {
     }));
   };
 
-  return { UploadButton, uploadStates, clearState };
+  return { UploadButton, uploadStates, clearState, removeFile };
 };
 
 export default useFileUpload;

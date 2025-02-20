@@ -202,7 +202,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
       isOpen={isOpen}
       onClose={onClose}
       title={blogId ? "Edit Blog" : "Add Blog"}
-      width="max-w-[50vw]"
+      width="w-1/2"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {inputFields.map((field) => (
@@ -230,24 +230,26 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
               />
             ) : field.type === "file" ? (
               <>
-                {uploadStates[field.id]?.uploadedUrl && (
+                {/* {uploadStates[field.id]?.uploadedUrl && (
                   <img
                     src={uploadStates[field.id].uploadedUrl}
                     alt={field.label}
                     className="w-50 h-50 rounded-md object-cover mx-auto"
                   />
-                )}
-                {formData[field?.id] ? (
+                )} */}
+                <UploadButton
+                  fieldId={field.id}
+                  showImage={false}
+                  onChange={(e) => handleChange(e)}
+                />
+                {((formData[field?.id] && blogId) ||
+                  uploadStates[field.id]?.uploadedUrl) && (
                   <img
-                    src={formData[field?.id]}
+                    src={
+                      uploadStates[field.id]?.uploadedUrl || formData[field?.id]
+                    }
                     alt="Image Preview"
-                    className="w-50 h-50 rounded-md object-cover mx-auto"
-                  />
-                ) : (
-                  <UploadButton
-                    fieldId={field.id}
-                    showImage={false}
-                    onChange={(e) => handleChange(e)}
+                    className="w-30 h-30 rounded-md object-cover mx-auto mt-8"
                   />
                 )}
               </>
