@@ -12,17 +12,14 @@ import { MdAdd } from "react-icons/md";
 
 const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
   const courses = useStore((state) => state.courseNames);
-  const categories = useStore((state) => state.categories);
   const user_email = useStore((state) => state.email);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [courseId, setCourseId] = useState(null);
-  const [categoryId, setCategoryId] = useState(null);
 
   useEffect(() => {
     if (syllabus) {
       setCourseId(syllabus?.course_id);
-      setCategoryId(syllabus?.category_id);
       setModules(syllabus.courses_syllabus || []);
     }
   }, [syllabus]);
@@ -60,7 +57,6 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
     setLoading(true);
     const payload = {
       course_id: courseId,
-      category_id: categoryId,
       user_email,
       courses_syllabus: modules,
     };
@@ -87,18 +83,6 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
       width="w-2/3"
     >
       <div className="space-y-4">
-        <Typography variant="h5">Category</Typography>
-        <Dropdown
-          id="course_id"
-          name="course_id"
-          options={categories.map((category) => ({
-            value: category.id,
-            label: category.name,
-          }))}
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          required
-        />
         <Typography variant="h5">Course</Typography>
         <Dropdown
           id="course_id"
@@ -107,7 +91,7 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
             value: course.id,
             label: course.name,
           }))}
-          value={courseId}
+          value={courseId || "0"}
           onChange={(e) => setCourseId(e.target.value)}
           required
         />
