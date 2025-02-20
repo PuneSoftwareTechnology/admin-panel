@@ -44,7 +44,9 @@ const TableView = ({
                     (key) => key !== "deleted" && (showId || key !== "id")
                   ) // Filter out id if showId is false
                   .map((key, cellIndex) => {
-                    const columnName = headers[cellIndex];
+                    const columnName =
+                      headers[showId ? cellIndex : cellIndex + 1];
+
                     const ColumnComponent = columnStyleMap[columnName];
                     return (
                       <td

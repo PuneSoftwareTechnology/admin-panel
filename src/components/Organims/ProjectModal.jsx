@@ -80,7 +80,7 @@ const ProjectModal = ({ isOpen, onClose, onSave, loading, project }) => {
               value: course.id,
               label: course.name,
             }))}
-            value={relatedCourse}
+            value={courses?.find((item) => item?.name === relatedCourse)?.id}
             onChange={(e) => setRelatedCourse(e.target.value)}
           />
         </div>

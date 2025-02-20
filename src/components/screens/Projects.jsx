@@ -105,14 +105,7 @@ const Projects = () => {
     }
   };
 
-  const headers = [
-    "ID",
-    "Name",
-    "Description",
-    "Created at",
-    "Related course",
-    "User email",
-  ];
+  const headers = ["ID", "Name", "Description", "Created at", "Related course"];
 
   const openDeleteModalHandler = (project) => {
     setSelectedProject(project);
@@ -131,7 +124,6 @@ const Projects = () => {
     created_at: item?.created_at || "",
     related_course:
       courses.find((course) => course?.id === item?.related_course)?.name || "",
-    user_email: item?.user_email || "",
   }));
 
   return (

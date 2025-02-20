@@ -75,7 +75,7 @@ const JobModal = ({ isOpen, onClose, onSave, loading, job }) => {
               value: course.id,
               label: course.name,
             }))}
-            value={relatedCourse}
+            value={courses?.find((item) => item?.name === relatedCourse)?.id}
             onChange={(e) => setRelatedCourse(e.target.value)}
           />
         </div>

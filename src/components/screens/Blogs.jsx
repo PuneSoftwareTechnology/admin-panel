@@ -86,7 +86,7 @@ const Blogs = () => {
     title: blog.title,
     slug: blog.slug,
     created_at: blog.created_at,
-    Auther: blog?.author_id,
+    author: blog?.author_id,
     status: blog?.status,
   }));
 
