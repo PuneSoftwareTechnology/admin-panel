@@ -174,8 +174,6 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
 
-    console.log(blogPayload, "?>?>?>>?>");
-
     try {
       const response = blogId
         ? await updateBlog(blogPayload)
