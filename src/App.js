@@ -18,6 +18,7 @@ import Courses from "./components/screens/Courses";
 import Jobs from "./components/screens/Jobs";
 import Projects from "./components/screens/Projects";
 import Syllabus from "./components/screens/Syllabus"; // Add this import
+import AllConsultations from "./components/screens/AllConsultations";
 
 const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
@@ -83,6 +84,10 @@ const App = () => {
         <Route
           path="syllabus"
           element={<ProtectedRoute element={<Syllabus />} />}
+        />
+        <Route
+          path="consultations"
+          element={<ProtectedRoute element={<AllConsultations />} />}
         />
       </Route>
       <Route path="/error" element={<ErrorPage />} />

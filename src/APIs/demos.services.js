@@ -29,3 +29,24 @@ export const deleteDemo = async (payload) => {
     true
   );
 };
+
+// New endpoints
+export const getConsultations = async () => {
+  return await apiRequest(
+    "GET",
+    "/demo/consultations",
+    null,
+    "Failed to fetch consultations",
+    true
+  );
+};
+
+export const deleteConsultation = async (payload) => {
+  return await apiRequest(
+    "PATCH",
+    "/demo/consultation/delete",
+    payload,
+    "Failed to delete consultation",
+    true
+  );
+};

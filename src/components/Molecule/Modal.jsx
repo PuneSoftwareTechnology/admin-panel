@@ -21,17 +21,12 @@ const Modal = ({ isOpen, onClose, title, children, width = "max-w-md" }) => {
 
   if (!isOpen) return null;
 
-  const handleBackdropClick = (event) => {
-    if (event.target.id === "modal-backdrop") {
-      onClose();
-    }
-  };
+  
 
   return (
     <div
       id="modal-backdrop"
       className="fixed inset-0 bg-black bg-opacity-50 flex items-start pt-8 justify-center z-50"
-      onClick={handleBackdropClick}
     >
       <div
         className={`bg-white p-6 rounded-lg shadow-lg w-[90%] ${width}  relative`}

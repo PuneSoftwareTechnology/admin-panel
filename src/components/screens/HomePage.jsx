@@ -21,6 +21,8 @@ import {
   getAllCategories,
   getAllCourseName,
 } from "../../APIs/courses.services";
+import { FaPeopleGroup } from "react-icons/fa6";
+
 
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
@@ -94,6 +96,12 @@ const menuItems = [
     label: "Syllabus",
     path: "syllabus",
     icon: <FaBookOpen />,
+    role: "ADMIN",
+  },
+  {
+    label: "Consultations",
+    path: "consultations",
+    icon: <FaPeopleGroup />,
     role: "ADMIN",
   },
 ];
