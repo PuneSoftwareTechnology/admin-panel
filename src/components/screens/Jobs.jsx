@@ -71,11 +71,25 @@ const Jobs = () => {
   };
 
   const saveJobAPICALL = async (job) => {
+
     setJobLoading(true);
     try {
       const response = selectedJob
-        ? await updateJob({ ...job, id: selectedJob.id, user_email: email })
-        : await addJob({ ...job, user_email: email });
+        ? await updateJob({
+            ...job,
+            related_course: courses?.filter(
+              (item) => item?.name === job.related_course
+            )?.id,
+            id: selectedJob.id,
+            user_email: email,
+          })
+        : await addJob({
+            ...job,
+            related_course: courses?.filter(
+              (item) => item?.name === job.related_course
+            )?.id,
+            user_email: email,
+          });
 
       if (response?.success) {
         toast.success(`Job ${selectedJob ? "updated" : "added"} successfully`);

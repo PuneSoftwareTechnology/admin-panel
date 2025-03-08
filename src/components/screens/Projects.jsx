@@ -75,6 +75,9 @@ const Projects = () => {
     try {
       const payload = {
         ...project,
+        related_course: courses?.filter(
+          (item) => item?.name === project.related_course
+        )?.id,
         user_email: email,
         ...(selectedProject && { id: selectedProject.id }),
       };

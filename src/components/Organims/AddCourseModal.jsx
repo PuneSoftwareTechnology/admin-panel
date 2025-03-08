@@ -10,7 +10,6 @@ import { createCourse, updateCourse } from "../../APIs/courses.services";
 import Dropdown from "../atoms/DropDown";
 import useStore from "../../utils/zustand";
 import { toast } from "react-toastify";
-import { GiCancel } from "react-icons/gi";
 
 const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const user_email = useStore((state) => state.email);
@@ -20,12 +19,17 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const [availableCourses, setAvailableCourses] = useState(courses);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const [intro, setIntro] = useState("");
   const [description, setDescription] = useState("");
   const [moduleHeading, setModuleHeading] = useState("");
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState();
   const [trainingProcedure, setTrainingProcedure] = useState(false);
+
+  const {
+    points: intro,
+    addPoint: addIntro,
+    removePoint: removeIntro,
+  } = useBulletPoints(courseData?.intro);
   const {
     points: modules,
     addPoint: addModule,
@@ -36,13 +40,11 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
     addPoint: addPrerequisite,
     removePoint: removePrerequisite,
   } = useBulletPoints(courseData?.prerequisite);
-
   const { UploadButton, uploadStates } = useFileUpload();
 
   useEffect(() => {
     if (courseData) {
       setName(courseData.name || "");
-      setIntro(courseData.intro || "");
       setDescription(courseData.description || "");
       setModuleHeading(courseData.module_heading || "");
       setSlug(courseData.slug || "");
@@ -125,7 +127,6 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
 
   const inputFields = [
     { label: "Course Name", value: name, onChange: setName, type: "text" },
-    { label: "Course Intro", value: intro, onChange: setIntro, type: "text" },
     {
       label: "Description",
       value: description,
@@ -194,6 +195,14 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
               label="Training Procedure"
             />
           </div>
+          <Typography variant="h5" className="block text-gray-700">
+            Course Intro
+          </Typography>
+          <BulletPointsInput
+            points={intro}
+            onAddPoint={addIntro}
+            onRemovePoint={removeIntro}
+          />
           <div className="mb-4">
             <Typography variant="h5" className="block text-gray-700">
               Modules
