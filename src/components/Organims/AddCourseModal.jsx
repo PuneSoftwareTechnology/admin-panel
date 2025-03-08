@@ -10,6 +10,7 @@ import { createCourse, updateCourse } from "../../APIs/courses.services";
 import Dropdown from "../atoms/DropDown";
 import useStore from "../../utils/zustand";
 import { toast } from "react-toastify";
+import { GiCancel } from "react-icons/gi";
 
 const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const user_email = useStore((state) => state.email);
