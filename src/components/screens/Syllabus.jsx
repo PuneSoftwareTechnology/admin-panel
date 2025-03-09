@@ -37,10 +37,10 @@ const Syllabus = () => {
     fetchSyllabusAPICall();
   }, []);
 
-  const headers = ["Course ID", "Course", "Modules", "User Email"];
+  const headers = ["ID", "Course", "Modules", "User Email"];
 
   const formattedSyllabus = syllabus.map((item, index) => ({
-    course_id: item?.course_id,
+    id: item?.course_id,
     course_name:
       courses.find((course) => course?.id === item?.course_id)?.name || "",
     courses_syllabus: item?.courses_syllabus || [],
