@@ -31,7 +31,10 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
   };
 
   const handleAddModule = () => {
-    setModules([...modules, { module_name: "", lessons: [] }]);
+    setModules([
+      ...modules,
+      { module_name: "", module_index: "", lessons: [] },
+    ]);
   };
 
   const handleRemoveModule = (index) => {
@@ -61,6 +64,8 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
       courses_syllabus: modules,
     };
 
+    console.log(payload, ">?>>?>?>?");
+
     try {
       if (syllabus) {
         await updateSyllabus({ id: syllabus.id, ...payload });
@@ -79,7 +84,7 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={syllabus ? "Edit Syllabus course" : "Add Syllabus Course"}
+      title={syllabus ? "Edit Syllabus Course" : "Add Syllabus Course"}
       width="w-1/2"
     >
       <div className="space-y-4">
@@ -106,6 +111,18 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
               value={module.module_name}
               onChange={(e) =>
                 handleModuleChange(moduleIndex, "module_name", e.target.value)
+              }
+              required
+            />
+            <Typography variant="h5">Module Index</Typography>
+            <InputBox
+              id={`module_index_${moduleIndex}`}
+              name={`module_index_${moduleIndex}`}
+              type="text"
+              placeholder="Module Index"
+              value={module.module_index}
+              onChange={(e) =>
+                handleModuleChange(moduleIndex, "module_index", e.target.value)
               }
               required
             />
