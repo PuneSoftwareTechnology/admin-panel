@@ -71,15 +71,18 @@ const Projects = () => {
   };
 
   const saveProjectAPICALL = async (project) => {
+
     setProjectLoading(true);
     try {
       const payload = {
         ...project,
-        related_course: courses?.filter(
-          (item) => item?.name === project.related_course
-        )?.id,
         user_email: email,
-        ...(selectedProject && { id: selectedProject.id }),
+        ...(selectedProject && {
+          id: selectedProject.id,
+          related_course: courses?.filter(
+            (item) => item?.name === project.related_course
+          )?.id,
+        }),
       };
 
       console.log("Payload being sent:", payload); // Add this line for logging

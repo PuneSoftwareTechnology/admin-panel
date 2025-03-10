@@ -6,12 +6,12 @@ import Typography from "../atoms/Typography";
 import { toast } from "react-toastify";
 import useStore from "../../utils/zustand";
 import { updateTestimonial } from "../../APIs/testimonial.services";
+import InputBox from "../atoms/InputBox";
 
 const EditTestimonial = ({ isOpen, onClose, data }) => {
   const courses = useStore((state) => state.courseNames);
-  const categories = useStore((state) => state.categories);
-  const user_email = useStore((state) => state.user_email);
-  const [editData, setEditData] = useState(data);
+  const user_email = useStore((state) => state.email);
+  const [editData, setEditData] = useState({ ...data });
   const [editLoading, setEditLoading] = useState(false);
 
   const courseOptions = courses.map((course) => ({
@@ -19,12 +19,7 @@ const EditTestimonial = ({ isOpen, onClose, data }) => {
     label: course?.name,
   }));
 
-  const categoryOptions = categories.map((category) => ({
-    value: category?.id,
-    label: category?.name,
-  }));
-
-  const handleDropdownChange = (name, value) => {
+  const handleChange = (name, value) => {
     setEditData({ ...editData, [name]: value });
   };
 
@@ -52,29 +47,49 @@ const EditTestimonial = ({ isOpen, onClose, data }) => {
       <div className="space-y-4">
         <div>
           <Typography className="mb-2" variant="h6">
+            Name
+          </Typography>
+          <InputBox
+            type="text"
+            value={editData?.name || ""}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Typography className="mb-2" variant="h6">
+            Rating
+          </Typography>
+          <InputBox
+            type="number"
+            min="1"
+            max="5"
+            value={editData?.star_rating || ""}
+            onChange={(e) => handleChange("star_rating", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Typography className="mb-2" variant="h6">
+            Testimonial
+          </Typography>
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={editData?.testimonial || ""}
+            onChange={(e) => handleChange("testimonial", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Typography className="mb-2" variant="h6">
             Course
           </Typography>
           <Dropdown
             id="course"
             name="course_id"
             options={courseOptions}
-            value={editData?.course_id} // Set the selected option object
-            onChange={(e) => handleDropdownChange("course_id", e.target.value)}
-          />
-        </div>
-
-        <div>
-          <Typography className="mb-2" variant="h6">
-            Category
-          </Typography>
-          <Dropdown
-            id="category"
-            name="category_id"
-            options={categoryOptions}
-            value={editData?.category_id} // Set the selected option object
-            onChange={(e) =>
-              handleDropdownChange("category_id", e.target.value)
-            }
+            value={editData?.course_id}
+            onChange={(e) => handleChange("course_id", e.target.value)}
           />
         </div>
 

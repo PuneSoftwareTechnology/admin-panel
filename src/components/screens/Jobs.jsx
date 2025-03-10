@@ -77,6 +77,9 @@ const Jobs = () => {
         ? await updateJob({
             ...job,
             id: selectedJob.id,
+            related_course: courses.find(
+              (course) => course?.id === job.related_course
+            )?.id,
             user_email: email,
           })
         : await addJob({

@@ -88,11 +88,18 @@ const inputFields = [
     type: "select",
     options: [], // Initialize with an empty array
   },
+  {
+    id: "course_id",
+    label: "Related Course",
+    type: "select",
+    options: [], // Initialize with an empty array
+  },
   { id: "status", label: "Status", type: "select", options: statusOptions },
 ];
 
 const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
   const categories = useStore((state) => state.categories);
+  const courses = useStore((state) => state.courseNames);
   const { UploadButton, uploadStates, clearState } = useFileUpload();
   const { points, addPoint, removePoint } = useBulletPoints([]);
 
@@ -117,6 +124,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     tertiary_content_points: [],
     conclusion: "",
     category_id: "",
+    course_id: "",
     status: "DRAFT",
   });
   const [loading, setLoading] = useState(false);
@@ -130,7 +138,14 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
           value: category.id,
         }));
     }
-  }, [categories]);
+    if (courses.length > 0) {
+      inputFields.find((field) => field.id === "course_id").options =
+        courses.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }));
+    }
+  }, [categories, courses]);
 
   useEffect(() => {
     if (blogId) {
@@ -191,7 +206,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
-    console.log(blogPayload);
+    delete blogPayload["file-upload-tertiary_content_image"];
 
     try {
       const response = blogId

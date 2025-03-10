@@ -33,11 +33,6 @@ const ProjectModal = ({ isOpen, onClose, onSave, loading, project }) => {
   }, [isOpen, project]);
 
   const handleSave = async () => {
-    console.log("Form data being sent:", {
-      name,
-      description,
-      related_course: relatedCourse,
-    }); // Add this line for logging
     await onSave({ name, description, related_course: relatedCourse });
   };
 
