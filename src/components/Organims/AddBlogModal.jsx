@@ -62,6 +62,21 @@ const inputFields = [
     type: "text",
   },
   {
+    id: "tertiary_content_intro",
+    label: "Tertiary Content Intro",
+    type: "textarea",
+  },
+  {
+    id: "tertiary_content_image",
+    label: "Tertiary Content Image",
+    type: "file",
+  },
+  {
+    id: "tertiary_content_text",
+    label: "Tertiary Content Text",
+    type: "textarea",
+  },
+  {
     id: "tertiary_content_points",
     label: "Tertiary Content Points",
     type: "custom", // Mark this as a custom field
@@ -96,6 +111,9 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     secondary_content_image: null,
     secondary_content_text: "",
     tertiary_content_title: "",
+    tertiary_content_intro: "",
+    tertiary_content_image: "",
+    tertiary_content_text: "",
     tertiary_content_points: [],
     conclusion: "",
     category_id: "",
@@ -173,6 +191,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
+    console.log(blogPayload);
 
     try {
       const response = blogId
