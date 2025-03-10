@@ -60,9 +60,7 @@ const Syllabus = () => {
   };
 
   const handleRowClick = (data) => {
-    setSelectedSyllabus(
-      syllabus?.find((item) => item?.course_id === data?.course_id)
-    );
+    setSelectedSyllabus(syllabus?.find((item) => item?.course_id === data?.id));
     setIsModalOpen(true);
   };
 
@@ -73,7 +71,7 @@ const Syllabus = () => {
 
   const handleDeleteSyllabus = async () => {
     try {
-      await deleteSyllabus({ course_id: selectedSyllabus?.course_id });
+      await deleteSyllabus({ course_id: selectedSyllabus?.id });
       fetchSyllabusAPICall();
     } catch (error) {
       console.error("Failed to delete syllabus:", error);
