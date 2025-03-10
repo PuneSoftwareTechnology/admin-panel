@@ -2,9 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { BiSolidCloudUpload } from "react-icons/bi";
 import Loader from "../components/atoms/Loader";
+import { UPLOAD_URL } from "../utils/urls";
 
-const UPLOAD_URL = "https://api.imgbb.com/1/upload";
-const API_KEY = "0cc73818100d94431369ba1bc02193f5";
 
 const useFileUpload = () => {
   const [uploadStates, setUploadStates] = useState({});
@@ -25,7 +24,7 @@ const useFileUpload = () => {
 
     try {
       const response = await axios.post(
-        `${UPLOAD_URL}?key=${API_KEY}`,
+        `${UPLOAD_URL}?key=4d8e213b8caa0364d5df19af520bcd0f`,
         formData,
         {
           headers: {
