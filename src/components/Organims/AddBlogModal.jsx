@@ -201,13 +201,15 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
         uploadStates.secondary_content_image?.uploadedUrl ||
         formData.secondary_content_image,
       tertiary_content_points: points, // Use the bullet points from the hook
+      tertiary_content_image:
+        uploadStates?.tertiary_content_image?.uploadedUrl ||
+        formData?.tertiary_content_image,
     };
 
     delete blogPayload["file-upload-featured_image"];
     delete blogPayload["file-upload-primary_content_image"];
     delete blogPayload["file-upload-secondary_content_image"];
     delete blogPayload["file-upload-tertiary_content_image"];
-
     try {
       const response = blogId
         ? await updateBlog(blogPayload)
