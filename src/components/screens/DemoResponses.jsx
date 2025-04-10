@@ -90,11 +90,18 @@ const DemoRequests = () => {
     }
   };
 
+  const customComponents = {
+    Message: ({ value }) => (
+      <span className="block break-words whitespace-normal">{value}</span>
+    ),
+  };
+
   return (
     <div className="p-4 sm:p-6">
       <Typography variant="h4">Demo Requests</Typography>
       {formattedData.length > 0 ? (
         <TableView
+          columnStyleMap={customComponents}
           headers={headers}
           data={formattedData}
           onDelete={(row) => {

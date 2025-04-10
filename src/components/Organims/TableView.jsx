@@ -51,7 +51,11 @@ const TableView = ({
                     return (
                       <td
                         key={cellIndex}
-                        className="px-4 py-2 border"
+                        className={`px-4 py-2 border ${
+                          ColumnComponent
+                            ? " max-w-[600px] overflow-hidden"
+                            : ""
+                        }`}
                         onClick={(e) => {
                           if (onCellClick) {
                             e.stopPropagation();
