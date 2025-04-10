@@ -23,7 +23,6 @@ import {
 } from "../../APIs/courses.services";
 import { FaPeopleGroup } from "react-icons/fa6";
 
-
 const menuItems = [
   { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
   {
@@ -158,7 +157,6 @@ const HomePage = () => {
                 item.role !== userRole &&
                 userRole !== "SUPER_ADMIN"
               ) {
-                // Skip rendering menu items where the role does not match the user's role
                 return null;
               }
 
