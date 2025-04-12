@@ -64,8 +64,6 @@ const AddSyllabusModal = ({ isOpen, onClose, syllabus }) => {
       courses_syllabus: modules,
     };
 
-    console.log(payload, ">?>>?>?>?");
-
     try {
       if (syllabus) {
         await updateSyllabus({ id: syllabus.id, ...payload });

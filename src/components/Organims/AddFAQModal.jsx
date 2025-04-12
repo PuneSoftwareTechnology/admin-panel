@@ -59,20 +59,27 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
     setError(""); // Clear any previous errors
 
     // Basic validation
-    if (!question || !answer || !courseId || !categoryId) {
+    if (!question || !answer) {
       setError("All fields are required");
       setLoading(false);
       return;
     }
 
+    // Construct the payload dynamically
     const faqPayload = {
       question,
       answer,
-      course_id: courseId,
-      category_id: categoryId,
       user_email: email,
       id: faqData?.id,
     };
+
+    if (courseId) {
+      faqPayload.course_id = courseId;
+    }
+
+    if (categoryId) {
+      faqPayload.category_id = categoryId;
+    }
 
     try {
       let response;
@@ -86,6 +93,12 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
 
       if (response?.success) {
         toast.success(response?.data?.message);
+        setLoading(false);
+        setQuestion("");
+        setAnswer("");
+        setCourseId("");
+        setCategoryId("");
+        setError("");
         onClose();
       } else {
         toast.error("Error occurred. Try again!");
@@ -95,6 +108,11 @@ const AddFAQModal = ({ isOpen, onClose, faqData = null }) => {
       toast.error("An error occurred while processing your request");
     } finally {
       setLoading(false);
+      setQuestion("");
+      setAnswer("");
+      setCourseId("");
+      setCategoryId("");
+      setError("");
       onClose();
     }
   };

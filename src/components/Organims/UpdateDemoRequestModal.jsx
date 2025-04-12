@@ -12,7 +12,6 @@ const UpdateDemoRequestModal = ({ isOpen, onClose, demoRequest }) => {
   const [comment, setComment] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(demoRequest, ">?>?>?>?>>");
 
   useEffect(() => {
     setComment(demoRequest?.comment);
