@@ -53,7 +53,7 @@ const TableView = ({
                         key={cellIndex}
                         className={`px-4 py-2 border ${
                           ColumnComponent
-                            ? " max-w-[600px] overflow-hidden"
+                            ? " max-w-[400px] overflow-hidden"
                             : ""
                         }`}
                         onClick={(e) => {

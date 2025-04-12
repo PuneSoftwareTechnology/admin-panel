@@ -8,6 +8,7 @@ import TableView from "../Organims/TableView";
 import DeleteModal from "../Organims/DeleteModal";
 import { toast } from "react-toastify";
 import useStore from "../../utils/zustand";
+import moment from "moment";
 
 const DemoRequests = () => {
   const courses = useStore((state) => state.courseNames);
@@ -50,6 +51,7 @@ const DemoRequests = () => {
     "Message",
     "Comment",
     "Next Step",
+    "created At",
     "Course",
   ];
 
@@ -62,6 +64,7 @@ const DemoRequests = () => {
       message: request.message || "",
       comment: request?.comment || "",
       next_step: request?.next_step || "",
+      created_at: moment(request?.created_at).format("DD/MM/YYYY"),
       course:
         courses?.find((item) => item?.id === request?.course_id)?.name || "",
     })) || [];
@@ -98,7 +101,7 @@ const DemoRequests = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <Typography variant="h4">Demo Requests</Typography>
+      <Typography variant="h4">Enquiries</Typography>
       {formattedData.length > 0 ? (
         <TableView
           columnStyleMap={customComponents}
