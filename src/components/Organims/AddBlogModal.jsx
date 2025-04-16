@@ -10,6 +10,7 @@ import Typography from "../atoms/Typography";
 import useFileUpload from "../../hooks/useUploadFile";
 import BulletPointsInput from "../Molecule/BulletPointsInput";
 import useBulletPoints from "../../hooks/useBulletPoints";
+import ToggleSwitch from "../atoms/ToggleSwitch";
 
 // Status options
 const statusOptions = [
@@ -93,6 +94,11 @@ const inputFields = [
     label: "Related Course",
     type: "select",
     options: [], // Initialize with an empty array
+  },
+  {
+    id: "homepage",
+    label: "Show on HomePage",
+    type: "toggle",
   },
   { id: "status", label: "Status", type: "select", options: statusOptions },
 ];
@@ -178,6 +184,10 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
     setFormData({ ...formData, [id]: value });
   };
 
+  const handleToggleChange = (id, value) => {
+    setFormData({ ...formData, [id]: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -243,7 +253,7 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
         {inputFields.map((field) => (
           <div key={field.id}>
             <Typography variant="h6" className="mb-2">
-              {field.label}
+              {field?.id == "homepage" ? "" : field.label}
             </Typography>
             {field.type === "textarea" ? (
               <textarea
@@ -287,6 +297,13 @@ const AddBlogModal = ({ isOpen, onClose, blogId = null }) => {
                 points={points}
                 onAddPoint={addPoint}
                 onRemovePoint={removePoint}
+              />
+            ) : field.type === "toggle" ? (
+              <ToggleSwitch
+                id={field.id}
+                checked={formData[field.id]}
+                onChange={(e) => handleToggleChange(field.id, e.target.checked)}
+                label={field.label}
               />
             ) : (
               <InputBox
