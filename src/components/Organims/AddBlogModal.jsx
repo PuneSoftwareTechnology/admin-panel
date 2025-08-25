@@ -22,6 +22,11 @@ const statusOptions = [
 // Input fields configuration
 const inputFields = [
   { id: "slug", label: "Slug", type: "text", required: true },
+  {
+    id: "meta_desc",
+    label: "Meta Description",
+    type: "textarea",
+  },
   { id: "title", label: "Title", type: "text", required: true },
   { id: "featured_image", label: "Featured Image", type: "file" },
   { id: "introduction", label: "Introduction", type: "textarea" },

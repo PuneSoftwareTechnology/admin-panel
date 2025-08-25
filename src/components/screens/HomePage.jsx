@@ -22,86 +22,82 @@ import {
   getAllCourseName,
 } from "../../APIs/courses.services";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { RESPONSIBILTIES, ROLES } from "../../utils/rolerespo";
 
 const menuItems = [
-  { label: "Home", path: "/home", icon: <HiHome />, role: "ADMIN" },
+  {
+    label: "Home",
+    path: "/home",
+    icon: <HiHome />,
+    roles: ["SUPER_ADMIN", "ENQUIRY_MANAGER", "MARKETING_PERSON"],
+  },
   {
     label: "Dashboard",
     path: "dashboard",
     icon: <HiViewGrid />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN", "ENQUIRY_MANAGER"],
   },
   {
     label: "Courses",
     path: "courses",
     icon: <FaBookReader />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Jobs",
     path: "jobs",
     icon: <FaBriefcase />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Projects",
     path: "projects",
     icon: <GiPoliceBadge />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Blogs",
     path: "blogs",
     icon: <ImBlogger />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN", "MARKETING_PERSON"],
   },
   {
     label: "Enquiry",
     path: "requests",
     icon: <FaCodePullRequest />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN", "ENQUIRY_MANAGER"],
   },
-  {
-    label: "Faqs",
-    path: "faqs",
-    icon: <FaQuestion />,
-    role: "ADMIN",
-  },
+  { label: "Faqs", path: "faqs", icon: <FaQuestion />, roles: ["SUPER_ADMIN"] },
   {
     label: "Testmonials",
     path: "testimonials",
     icon: <MdReviews />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Settings",
     path: "settings",
     icon: <HiOutlineCog />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
-  {
-    label: "Users",
-    path: "users",
-    icon: <FaUsers />,
-    role: "SUPER_ADMIN",
-  },
+  { label: "Users", path: "users", icon: <FaUsers />, roles: ["SUPER_ADMIN"] },
   {
     label: "Miscellaneous",
     path: "misc",
     icon: <MdAlignHorizontalLeft />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Syllabus",
     path: "syllabus",
     icon: <FaBookOpen />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN"],
   },
   {
     label: "Consultations",
     path: "consultations",
     icon: <FaPeopleGroup />,
-    role: "ADMIN",
+    roles: ["SUPER_ADMIN", "ENQUIRY_MANAGER"],
   },
 ];
 
@@ -151,16 +147,9 @@ const HomePage = () => {
         </div>
         <nav className="mt-4">
           <ul className="space-y-2 px-4">
-            {menuItems.map((item) => {
-              if (
-                item.role &&
-                item.role !== userRole &&
-                userRole !== "SUPER_ADMIN"
-              ) {
-                return null;
-              }
-
-              return (
+            {menuItems
+              .filter((item) => item.roles.includes(userRole))
+              .map((item) => (
                 <li key={item.path}>
                   <Link
                     to={item.path}
@@ -176,8 +165,7 @@ const HomePage = () => {
                     {item.label}
                   </Link>
                 </li>
-              );
-            })}
+              ))}
           </ul>
         </nav>
       </div>

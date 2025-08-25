@@ -6,6 +6,7 @@ import PrimaryButton from "../atoms/PrimaryButton";
 import { createAdminUser, updateAdminUser } from "../../APIs/admin.services";
 import Dropdown from "../atoms/DropDown";
 import { toast } from "react-toastify";
+import { ROLES } from "../../utils/rolerespo";
 
 const formFields = [
   {
@@ -38,10 +39,10 @@ const formFields = [
   },
 ];
 
-const roleOptions = [
-  { value: "ADMIN", label: "Admin" },
-  { value: "SUPER_ADMIN", label: "Super Admin" },
-];
+const roleOptions = ROLES.map((role) => ({
+  value: role,
+  label: role,
+}));
 
 const CreateUserModal = ({ isOpen, onClose, user = null }) => {
   const [userDetails, setUserDetails] = useState({
@@ -49,7 +50,7 @@ const CreateUserModal = ({ isOpen, onClose, user = null }) => {
     name: "",
     email: "",
     password: "",
-    role: "ADMIN",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);

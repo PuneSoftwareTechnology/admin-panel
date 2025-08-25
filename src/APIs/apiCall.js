@@ -32,9 +32,17 @@ export const apiRequest = async (
   } catch (err) {
     if (axios.isAxiosError(err)) {
       console.error("Axios Error:", err.response?.data || err.message);
-      if (err.response.data.message === "USER_NOT_FOUND") {
+
+      const backendMessage = err.response?.data?.message;
+      if (
+        backendMessage === "USER_NOT_FOUND" ||
+        backendMessage === "Invalid or Expired Token"
+      ) {
         localStorage.clear();
+        window.location.href = "/admin-login";
+        return; // Prevent further execution
       }
+
       throw new Error(err.message || errorMessage);
     } else {
       console.error("Unexpected Error:", err);

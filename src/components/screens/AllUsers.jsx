@@ -74,25 +74,30 @@ const UsersTable = () => {
   }));
 
   const colorScheme = {
-    ADMIN: "bg-yellow-400",
     SUPER_ADMIN: "bg-green-700",
+    ENQUIRY_MANAGER: "bg-blue-600",
+    MARKETING_PERSON: "bg-purple-600",
   };
 
   const customComponents = {
     Role: ({ value }) => (
       <span
-        className={`text-white text-xs font-semibold px-2 py-1 rounded-md ${colorScheme[value]}`}
+        className={`text-white text-xs font-semibold px-2 py-1 rounded-md ${
+          colorScheme[value] || "bg-gray-400"
+        }`}
       >
         {value}
       </span>
     ),
   };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <Typography variant="h3">Users</Typography>
         <PrimaryButton
           onClick={() => {
+            setSelectedUser(null);
             setOpenCreateModal(true);
           }}
         >

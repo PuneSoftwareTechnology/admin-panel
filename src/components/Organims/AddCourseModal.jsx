@@ -25,7 +25,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState();
   const [trainingProcedure, setTrainingProcedure] = useState(false);
-
+  const [metaDesc, setMetaDesc] = useState(courseData?.meta_desc || "");
   const {
     points: intro,
     addPoint: addIntro,
@@ -77,6 +77,7 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       training_procedure: trainingProcedure,
       featured_image:
         uploadStates.courseImage?.uploadedUrl || courseData?.featured_image,
+      meta_desc: metaDesc,
       user_email,
     };
 
@@ -132,6 +133,12 @@ const AddCourseModal = ({ isOpen, onClose, courseData }) => {
       label: "Description",
       value: description,
       onChange: setDescription,
+      type: "textarea",
+    },
+    {
+      value: metaDesc,
+      onChange: setMetaDesc,
+      label: "Meta Description",
       type: "textarea",
     },
     {
