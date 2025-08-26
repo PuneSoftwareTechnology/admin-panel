@@ -24,10 +24,22 @@ const ProtectedRoute = ({ element, requiredRole, redirectIfAuth = false }) => {
   const { isAuthenticated, userRole = "ADMIN" } = useStore((state) => state);
 
   const navigateTo = useMemo(() => {
+    // Redirect if not authenticated
     if (!isAuthenticated && !redirectIfAuth) return "/admin-login";
-    if (redirectIfAuth && isAuthenticated) return "/home"; // Redirect logged-in users from login page
-    if (requiredRole === "SUPER_ADMIN" && userRole === "ADMIN")
-      return "/not-authorised"; // Block ADMIN from SUPER_ADMIN routes
+
+    // Redirect logged-in users away from login page
+    if (redirectIfAuth && isAuthenticated) return "/home";
+
+    // If requiredRole is defined
+    if (requiredRole) {
+      // Handle multiple roles
+      const allowedRoles = Array.isArray(requiredRole)
+        ? requiredRole
+        : [requiredRole];
+
+      if (!allowedRoles.includes(userRole)) return "/not-authorised";
+    }
+
     return null;
   }, [isAuthenticated, userRole, requiredRole, redirectIfAuth]);
 
@@ -46,48 +58,121 @@ const App = () => {
         element={<ProtectedRoute element={<AdminLogin />} redirectIfAuth />}
       />
       <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}>
-        <Route index element={<div>Welcome to Home</div>} />
+        <Route
+          index
+          element={<div>Welcome to Home</div>}
+          requiredRole={["SUPER_ADMIN", "ENQUIRY_MANAGER", "MARKETING_PERSON"]}
+        />
         <Route
           path="dashboard"
-          element={<ProtectedRoute element={<Dashboard />} />}
+          element={
+            <ProtectedRoute
+              element={<Dashboard />}
+              requiredRole={["SUPER_ADMIN", "ENQUIRY_MANAGER"]}
+            />
+          }
         />
         <Route
           path="requests"
-          element={<ProtectedRoute element={<DemoRequests />} />}
+          element={
+            <ProtectedRoute
+              element={<DemoRequests />}
+              requiredRole={["SUPER_ADMIN", "ENQUIRY_MANAGER"]}
+            />
+          }
         />
-        <Route path="blogs" element={<ProtectedRoute element={<Blogs />} />} />
+        <Route
+          path="blogs"
+          element={
+            <ProtectedRoute
+              element={<Blogs />}
+              requiredRole={["SUPER_ADMIN", "MARKETING_PERSON"]}
+            />
+          }
+        />
         <Route
           path="courses"
-          element={<ProtectedRoute element={<Courses />} />}
+          element={
+            <ProtectedRoute
+              element={<Courses />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
         />
-        <Route path="jobs" element={<ProtectedRoute element={<Jobs />} />} />
+        <Route
+          path="jobs"
+          element={
+            <ProtectedRoute element={<Jobs />} requiredRole={["SUPER_ADMIN"]} />
+          }
+        />
         <Route
           path="projects"
-          element={<ProtectedRoute element={<Projects />} />}
+          element={
+            <ProtectedRoute
+              element={<Projects />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
         />
         <Route
           path="settings"
-          element={<ProtectedRoute element={<Settings />} />}
+          element={
+            <ProtectedRoute
+              element={<Settings />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
         />
-        <Route path="faqs" element={<ProtectedRoute element={<ALLFAQs />} />} />
+        <Route
+          path="faqs"
+          element={
+            <ProtectedRoute
+              element={<ALLFAQs />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
+        />
         <Route
           path="testimonials"
-          element={<ProtectedRoute element={<AllTestimonials />} />}
+          element={
+            <ProtectedRoute
+              element={<AllTestimonials />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
         />
         <Route
           path="users"
           element={
-            <ProtectedRoute element={<AllUsers />} requiredRole="SUPER_ADMIN" />
+            <ProtectedRoute
+              element={<AllUsers />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
           }
         />
-        <Route path="misc" element={<ProtectedRoute element={<Misc />} />} />
+        <Route
+          path="misc"
+          element={
+            <ProtectedRoute element={<Misc />} requiredRole={["SUPER_ADMIN"]} />
+          }
+        />
         <Route
           path="syllabus"
-          element={<ProtectedRoute element={<Syllabus />} />}
+          element={
+            <ProtectedRoute
+              element={<Syllabus />}
+              requiredRole={["SUPER_ADMIN"]}
+            />
+          }
         />
         <Route
           path="consultations"
-          element={<ProtectedRoute element={<AllConsultations />} />}
+          element={
+            <ProtectedRoute
+              element={<AllConsultations />}
+              requiredRole={["SUPER_ADMIN", "ENQUIRY_MANAGER"]}
+            />
+          }
         />
       </Route>
       <Route path="/error" element={<ErrorPage />} />
