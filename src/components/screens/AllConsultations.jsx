@@ -8,6 +8,7 @@ import {
   deleteConsultation,
   getConsultations,
 } from "../../APIs/demos.services";
+import { FaDownload } from "react-icons/fa6";
 
 const AllConsultations = () => {
   const [loading, setLoading] = useState(false);
@@ -63,6 +64,38 @@ const AllConsultations = () => {
     }
   };
 
+  // Add this function inside your component
+  const handleDownloadCSV = () => {
+    if (!consultations || consultations.length === 0) {
+      toast.info("No consultations to download");
+      return;
+    }
+
+    // Create CSV headers
+    const headers = ["Name", "Phone Number", "Message", "Created at"];
+    const rows = consultations.map((c) => [
+      c.name,
+      c.phone_number,
+      c.message,
+      c.created_at,
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((item) => `"${item}"`).join(","))
+      .join("\n");
+
+    // Create a blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "consultations.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return <Loader className="mx-auto mt-32 border-gray-900" size="large" />;
   }
@@ -78,10 +111,21 @@ const AllConsultations = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Typography variant="h3" className="mb-2">
-        Consultations
-      </Typography>
-
+      <div className="flex justify-between items-center mb-4">
+        <Typography variant="h3" className="mb-2">
+          Consultations
+        </Typography>
+        <div className="flex gap-2">
+          <button
+            onClick={handleDownloadCSV}
+            className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition font-semibold"
+            title="Download as CSV"
+          >
+            <FaDownload className="mr-2 text-xl" />
+            Download CSV
+          </button>
+        </div>
+      </div>
       <TableView
         data={formattedData}
         headers={["Name", "Phone Number", "Message", "Created at"]}
