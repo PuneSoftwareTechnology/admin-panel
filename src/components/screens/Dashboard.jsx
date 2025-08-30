@@ -7,7 +7,7 @@ import { MdOpenInNew } from "react-icons/md";
 const Dashboard = () => {
   const handleClick = (e) => {
     e.preventDefault();
-    window.open(`${PST_URL}/add-testimonial`, "_blank");
+    window.open(`${PST_URL}/testimonial`, "_blank");
   };
   return (
     <div className="text-2xl font-bold">
