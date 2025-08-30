@@ -3,7 +3,7 @@ import { apiRequest } from "./apiCall";
 export const fetchAllTestimonials = async () => {
   return await apiRequest(
     "GET",
-    "/testimonial/all",
+    "/testimonial/all?backend=true",
     null,
     "Failed to fetch testimonials",
     true
