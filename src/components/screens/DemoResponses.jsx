@@ -65,7 +65,7 @@ const DemoRequests = () => {
       message: request.message || "",
       comment: request?.comment || "",
       next_step: request?.next_step || "",
-      created_at: moment(request?.created_at).format("DD/MM/YYYY"),
+      created_at: request?.created_at,
       course:
         courses?.find((item) => item?.id === request?.course_id)?.name || "",
     })) || [];
